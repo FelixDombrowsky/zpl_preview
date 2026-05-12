@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "zpl_test", "zpl_test.csproj", "{CD1919DA-3A31-7484-FCDA-930E140FBE57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD1919DA-3A31-7484-FCDA-930E140FBE57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD1919DA-3A31-7484-FCDA-930E140FBE57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD1919DA-3A31-7484-FCDA-930E140FBE57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD1919DA-3A31-7484-FCDA-930E140FBE57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BF10E79F-401A-4028-8A6C-301257DA9A21}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZPL Label Preview</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f5f5f5; }
+
+    nav {
+      background: #1565c0; display: flex; gap: 4px; padding: 0 16px;
+    }
+    nav a {
+      color: #fff; text-decoration: none; padding: 14px 20px;
+      font-size: 0.95rem; opacity: 0.75; display: block;
+    }
+    nav a:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+    nav a.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: 600; }
+
+    .content { padding: 24px; }
+    h1 { margin-bottom: 20px; font-size: 1.4rem; color: #333; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 4px; }
+    select, input[type="number"] {
+      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem;
+    }
+    textarea {
+      width: 100%; height: 220px; padding: 10px; border: 1px solid #ccc;
+      border-radius: 4px; font-family: monospace; font-size: 0.85rem; resize: vertical;
+      margin-bottom: 12px;
+    }
+    .btn-row { display: flex; gap: 10px; margin-bottom: 20px; }
+    button {
+      padding: 9px 22px; border: none; border-radius: 4px;
+      font-size: 0.95rem; cursor: pointer;
+    }
+    #btnPreview { background: #1976d2; color: #fff; }
+    #btnPreview:hover { background: #1565c0; }
+    #btnDownload { background: #388e3c; color: #fff; display: none; }
+    #btnDownload:hover { background: #2e7d32; }
+    #error { color: #c62828; font-size: 0.9rem; margin-bottom: 12px; display: none; }
+    #previewImg { max-width: 100%; border: 1px solid #ccc; background: #fff; display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/" class="active">ZPL Label Preview</a>
+    <a href="/generate-qr.html">Generate New QR</a>
+  </nav>
+
+  <div class="content">
+    <h1>ZPL Label Preview</h1>
+
+    <div class="form-grid">
+      <div>
+        <label for="dpi">DPI</label>
+        <select id="dpi">
+          <option value="8dpmm">8 dpmm (203 dpi)</option>
+          <option value="12dpmm">12 dpmm (300 dpi)</option>
+          <option value="24dpmm">24 dpmm (600 dpi)</option>
+        </select>
+      </div>
+      <div>
+        <label for="width">Width (inch)</label>
+        <input type="number" id="width" value="4" min="0.1" step="0.1" />
+      </div>
+      <div>
+        <label for="height">Height (inch)</label>
+        <input type="number" id="height" value="3" min="0.1" step="0.1" />
+      </div>
+    </div>
+
+    <label for="zpl">ZPL Code</label>
+    <textarea id="zpl" placeholder="วาง ZPL code ที่นี่...">^XA
+^CI28
+^FO80,40^BQN,2,6^FDLA,SAMPLE-QR-DATA^FS
+^FO490,30^A0N,30,30^FDPLANT:  TH-BKK^FS
+^FO490,70^A0N,30,30^FDVENDOR:  ABC Corp^FS
+^FO490,110^A0N,30,30^FDP/N:  12345678^FS
+^FO490,150^A0N,30,30^FDP/O.No: PO-9999^FS
+^FO490,190^A0N,30,30^FDINV No: INV-001^FS
+^FO490,230^A0N,30,30^FDQTY: 100        PCE^FS
+^FO490,270^A0N,30,30^FDD/C: 260311 REV.02^FS
+^XZ</textarea>
+
+    <div class="btn-row">
+      <button id="btnPreview">Preview</button>
+      <button id="btnDownload">Download PNG</button>
+    </div>
+
+    <div id="error"></div>
+    <img id="previewImg" alt="Label preview" />
+  </div>
+
+  <script>
+    const btnPreview = document.getElementById('btnPreview');
+    const btnDownload = document.getElementById('btnDownload');
+    const previewImg = document.getElementById('previewImg');
+    const errorEl = document.getElementById('error');
+
+    let currentBlobUrl = null;
+
+    btnPreview.addEventListener('click', async () => {
+      const zpl = document.getElementById('zpl').value.trim();
+      const dpi = document.getElementById('dpi').value;
+      const width = document.getElementById('width').value;
+      const height = document.getElementById('height').value;
+
+      if (!zpl) { showError('กรุณาใส่ ZPL code'); return; }
+
+      errorEl.style.display = 'none';
+      btnPreview.textContent = 'Loading...';
+      btnPreview.disabled = true;
+
+      try {
+        const res = await fetch('/api/zpl/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ zpl, dpi, width, height })
+        });
+
+        if (!res.ok) { showError(`Error: ${res.status} ${res.statusText}`); return; }
+
+        const blob = await res.blob();
+        if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+        currentBlobUrl = URL.createObjectURL(blob);
+
+        previewImg.src = currentBlobUrl;
+        previewImg.style.display = 'block';
+        btnDownload.style.display = 'inline-block';
+      } catch (e) {
+        showError('ไม่สามารถเชื่อมต่อ API ได้: ' + e.message);
+      } finally {
+        btnPreview.textContent = 'Preview';
+        btnPreview.disabled = false;
+      }
+    });
+
+    btnDownload.addEventListener('click', () => {
+      if (!currentBlobUrl) return;
+      const a = document.createElement('a');
+      a.href = currentBlobUrl;
+      a.download = 'label.png';
+      a.click();
+    });
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

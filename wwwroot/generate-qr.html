@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate New QR</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f5f5f5; }
+
+    /* Nav */
+    nav { background: #1565c0; display: flex; gap: 4px; padding: 0 16px; }
+    nav a {
+      color: #fff; text-decoration: none; padding: 14px 20px;
+      font-size: 0.95rem; opacity: 0.75; display: block;
+    }
+    nav a:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+    nav a.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: 600; }
+
+    .content { padding: 20px 24px; max-width: 720px; }
+    h1 { margin-bottom: 20px; font-size: 1.4rem; color: #333; }
+
+    /* Step indicator */
+    .steps { display: flex; align-items: center; margin-bottom: 24px; }
+    .step-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #aaa; }
+    .step-item.active { color: #1565c0; font-weight: 600; }
+    .step-item.done { color: #388e3c; }
+    .step-num {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ccc;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+    }
+    .step-item.active .step-num { border-color: #1565c0; color: #1565c0; }
+    .step-item.done .step-num { border-color: #388e3c; background: #388e3c; color: #fff; }
+    .step-divider { flex: 1; height: 2px; background: #ddd; margin: 0 6px; max-width: 40px; }
+    .step-divider.done { background: #388e3c; }
+
+    /* Scan step */
+    #stepScan { display: flex; flex-direction: column; align-items: center; padding: 16px 0; }
+    .scan-box {
+      width: 200px; height: 200px; border: 3px solid #1565c0; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; background: #fff; margin-bottom: 20px;
+    }
+    .scan-box svg { width: 110px; height: 110px; opacity: 0.25; }
+    .scan-line {
+      position: absolute; left: 10px; right: 10px; height: 2px; background: #f44336;
+      top: 20px; animation: scanAnim 2s ease-in-out infinite;
+    }
+    @keyframes scanAnim { 0% { top: 20px; } 50% { top: 170px; } 100% { top: 20px; } }
+    .scan-hint { font-size: 0.9rem; color: #777; margin-bottom: 20px; }
+
+    /* Scanned badge */
+    .scanned-badge {
+      background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px;
+      padding: 10px 14px; margin-bottom: 18px; font-size: 0.9rem; color: #1565c0;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .scanned-badge strong { font-family: monospace; font-size: 1rem; }
+
+    /* Form */
+    .section-title {
+      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: #888; margin-bottom: 10px;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 4px; }
+    select, input[type="number"], input[type="text"] {
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;
+      font-size: 1rem; background: #fff;
+    }
+    select:focus, input:focus {
+      outline: none; border-color: #1976d2; box-shadow: 0 0 0 2px rgba(25,118,210,0.15);
+    }
+
+    /* Layout Editor */
+    .layout-section {
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 10px;
+      padding: 16px; margin-bottom: 20px;
+    }
+    .layout-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    @media (max-width: 480px) { .layout-grid { grid-template-columns: 1fr; } }
+    .layout-card {
+      border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0;
+    }
+    .layout-card-header {
+      padding: 9px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
+    }
+    .qr-header { background: #fff3e0; color: #e65100; }
+    .data-header { background: #e8f5e9; color: #2e7d32; }
+    .layout-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+
+    .slider-row { display: flex; flex-direction: column; gap: 4px; }
+    .slider-label {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.82rem; color: #555;
+    }
+    .slider-val {
+      background: #f0f0f0; border-radius: 4px; padding: 1px 7px;
+      font-family: monospace; font-size: 0.82rem; color: #333; min-width: 36px; text-align: center;
+    }
+    input[type="range"] {
+      width: 100%; height: 6px; cursor: pointer;
+      accent-color: #1976d2;
+      /* larger hit area for tablet */
+      padding: 8px 0;
+    }
+
+    /* Buttons */
+    .btn-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    button {
+      padding: 11px 24px; border: none; border-radius: 6px;
+      font-size: 1rem; cursor: pointer; touch-action: manipulation;
+    }
+    .btn-primary { background: #1976d2; color: #fff; }
+    .btn-primary:hover { background: #1565c0; }
+    .btn-primary:disabled { background: #90caf9; cursor: default; }
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-secondary:hover { background: #bdbdbd; }
+    .btn-success { background: #388e3c; color: #fff; }
+    .btn-success:hover { background: #2e7d32; }
+
+    /* Auto-refresh indicator */
+    #refreshBadge {
+      display: none; align-items: center; gap: 6px;
+      background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px;
+      padding: 8px 12px; font-size: 0.85rem; color: #f57f17; margin-bottom: 14px;
+    }
+    #refreshBadge.show { display: flex; }
+
+    /* Preview result */
+    .divider { border: none; border-top: 1px solid #e0e0e0; margin: 20px 0; }
+    #previewResult { display: none; }
+    .result-label { font-size: 0.82rem; font-weight: 700; color: #555; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+    #previewImg {
+      max-width: 100%; border: 1px solid #ccc; background: #fff;
+      display: block; margin-bottom: 16px; border-radius: 4px;
+    }
+    #zplOutput {
+      width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc;
+      border-radius: 4px; font-family: monospace; font-size: 0.8rem;
+      background: #fafafa; resize: vertical; margin-bottom: 12px;
+    }
+    #error { color: #c62828; font-size: 0.9rem; margin-bottom: 12px; display: none; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">ZPL Label Preview</a>
+    <a href="/generate-qr.html" class="active">Generate New QR</a>
+  </nav>
+
+  <div class="content">
+    <h1>Generate New QR</h1>
+
+    <div class="steps">
+      <div class="step-item active" id="si1"><div class="step-num">1</div><span>Scan QR</span></div>
+      <div class="step-divider" id="sd1"></div>
+      <div class="step-item" id="si2"><div class="step-num">2</div><span>กรอกข้อมูล</span></div>
+      <div class="step-divider" id="sd2"></div>
+      <div class="step-item" id="si3"><div class="step-num">3</div><span>Preview</span></div>
+    </div>
+
+    <!-- Step 1: Scan -->
+    <div id="stepScan">
+      <div class="scan-box">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/>
+          <rect x="18" y="18" width="14" height="14" fill="#333"/>
+          <rect x="60" y="10" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/>
+          <rect x="68" y="18" width="14" height="14" fill="#333"/>
+          <rect x="10" y="60" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/>
+          <rect x="18" y="68" width="14" height="14" fill="#333"/>
+          <rect x="60" y="60" width="8" height="8" fill="#333"/>
+          <rect x="72" y="60" width="8" height="8" fill="#333"/>
+          <rect x="84" y="60" width="8" height="8" fill="#333"/>
+          <rect x="60" y="72" width="8" height="8" fill="#333"/>
+          <rect x="76" y="76" width="16" height="8" fill="#333"/>
+          <rect x="84" y="68" width="8" height="8" fill="#333"/>
+        </svg>
+        <div class="scan-line"></div>
+      </div>
+      <p class="scan-hint">กดปุ่มด้านล่างเพื่อสแกน QR Code</p>
+      <button class="btn-primary" id="btnScan">Scan QR Code</button>
+    </div>
+
+    <!-- Step 2: Form -->
+    <div id="stepForm" style="display:none">
+      <div class="scanned-badge">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        QR Data: <strong id="qrDataDisplay"></strong>
+      </div>
+
+      <p class="section-title">ตั้งค่า Label</p>
+      <div class="form-grid">
+        <div>
+          <label for="dpi">DPI</label>
+          <select id="dpi">
+            <option value="8dpmm">8 dpmm (203 dpi)</option>
+            <option value="12dpmm">12 dpmm (300 dpi)</option>
+            <option value="24dpmm">24 dpmm (600 dpi)</option>
+          </select>
+        </div>
+        <div>
+          <label for="width">Width (inch)</label>
+          <input type="number" id="width" value="4" min="0.1" step="0.1" />
+        </div>
+        <div>
+          <label for="height">Height (inch)</label>
+          <input type="number" id="height" value="3" min="0.1" step="0.1" />
+        </div>
+      </div>
+
+      <div class="form-grid-2">
+        <div>
+          <label for="wo">Work Order (W/O)</label>
+          <input type="text" id="wo" placeholder="เช่น 14955651" />
+        </div>
+        <div>
+          <label for="line">Line</label>
+          <input type="text" id="line" placeholder="เช่น STF-108" />
+        </div>
+      </div>
+
+      <!-- Layout Editor -->
+      <div class="layout-section">
+        <p class="section-title" style="margin-bottom:12px">ปรับ Layout</p>
+        <div class="layout-grid">
+
+          <!-- QR Component -->
+          <div class="layout-card">
+            <div class="layout-card-header qr-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/>
+              </svg>
+              QR Component
+            </div>
+            <div class="layout-card-body">
+              <div class="slider-row">
+                <div class="slider-label"><span>ตำแหน่ง X</span><span class="slider-val" id="qrXVal">60</span></div>
+                <input type="range" id="qrX" min="0" max="700" value="60" />
+              </div>
+              <div class="slider-row">
+                <div class="slider-label"><span>ตำแหน่ง Y</span><span class="slider-val" id="qrYVal">40</span></div>
+                <input type="range" id="qrY" min="0" max="500" value="40" />
+              </div>
+              <div class="slider-row">
+                <div class="slider-label"><span>ขนาด QR</span><span class="slider-val" id="qrSizeVal">6</span></div>
+                <input type="range" id="qrSize" min="2" max="10" value="6" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Component -->
+          <div class="layout-card">
+            <div class="layout-card-header data-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="14" y2="18"/>
+              </svg>
+              Data Component
+            </div>
+            <div class="layout-card-body">
+              <div class="slider-row">
+                <div class="slider-label"><span>ตำแหน่ง X</span><span class="slider-val" id="dataXVal">320</span></div>
+                <input type="range" id="dataX" min="0" max="700" value="320" />
+              </div>
+              <div class="slider-row">
+                <div class="slider-label"><span>ตำแหน่ง Y</span><span class="slider-val" id="dataYVal">30</span></div>
+                <input type="range" id="dataY" min="0" max="500" value="30" />
+              </div>
+              <div class="slider-row">
+                <div class="slider-label"><span>ขนาด Font</span><span class="slider-val" id="fontSizeVal">28</span></div>
+                <input type="range" id="fontSize" min="16" max="60" value="28" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="refreshBadge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.82"/></svg>
+        Layout เปลี่ยนแล้ว — กำลัง refresh preview...
+      </div>
+      <div id="error"></div>
+
+      <div class="btn-row">
+        <button class="btn-primary" id="btnPreview">Preview</button>
+        <button class="btn-secondary" id="btnBack">Back</button>
+      </div>
+
+      <!-- Preview Result -->
+      <div id="previewResult">
+        <hr class="divider" />
+        <p class="result-label">Label Preview</p>
+        <img id="previewImg" alt="Label preview" />
+        <p class="result-label">ZPL Code</p>
+        <textarea id="zplOutput" readonly></textarea>
+        <div class="btn-row">
+          <button class="btn-success" id="btnDownload">Download PNG</button>
+          <button class="btn-secondary" id="btnCopyZpl">Copy ZPL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MOCK_QR_DATA = 'SAMPLE-QR-001';
+
+    let scannedData = '';
+    let currentBlobUrl = null;
+    let hasPreviewedOnce = false;
+    let debounceTimer = null;
+
+    const stepScan    = document.getElementById('stepScan');
+    const stepForm    = document.getElementById('stepForm');
+    const previewResult = document.getElementById('previewResult');
+    const previewImg  = document.getElementById('previewImg');
+    const zplOutput   = document.getElementById('zplOutput');
+    const errorEl     = document.getElementById('error');
+    const refreshBadge = document.getElementById('refreshBadge');
+
+    // Step indicator
+    function setStep(n) {
+      [1,2,3].forEach(i => {
+        const si = document.getElementById('si'+i);
+        si.classList.remove('active','done');
+        if (i < n) si.classList.add('done');
+        else if (i === n) si.classList.add('active');
+        if (i <= 2) document.getElementById('sd'+i).classList.toggle('done', i < n);
+      });
+    }
+
+    // Slider value display + auto-refresh
+    function bindSlider(id, valId) {
+      const slider = document.getElementById(id);
+      const display = document.getElementById(valId);
+      slider.addEventListener('input', () => {
+        display.textContent = slider.value;
+        onLayoutChange();
+      });
+    }
+
+    bindSlider('qrX', 'qrXVal');
+    bindSlider('qrY', 'qrYVal');
+    bindSlider('qrSize', 'qrSizeVal');
+    bindSlider('dataX', 'dataXVal');
+    bindSlider('dataY', 'dataYVal');
+    bindSlider('fontSize', 'fontSizeVal');
+
+    function onLayoutChange() {
+      if (!hasPreviewedOnce) return;
+      refreshBadge.classList.add('show');
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        refreshBadge.classList.remove('show');
+        doPreview();
+      }, 900);
+    }
+
+    // Step 1 → 2
+    document.getElementById('btnScan').addEventListener('click', () => {
+      scannedData = MOCK_QR_DATA;
+      document.getElementById('qrDataDisplay').textContent = scannedData;
+      stepScan.style.display = 'none';
+      stepForm.style.display = 'block';
+      previewResult.style.display = 'none';
+      hasPreviewedOnce = false;
+      setStep(2);
+    });
+
+    document.getElementById('btnBack').addEventListener('click', () => {
+      stepForm.style.display = 'none';
+      stepScan.style.display = 'flex';
+      previewResult.style.display = 'none';
+      hasPreviewedOnce = false;
+      setStep(1);
+    });
+
+    document.getElementById('btnPreview').addEventListener('click', doPreview);
+
+    async function doPreview() {
+      const wo   = document.getElementById('wo').value.trim();
+      const line = document.getElementById('line').value.trim();
+      const dpi    = document.getElementById('dpi').value;
+      const width  = document.getElementById('width').value;
+      const height = document.getElementById('height').value;
+
+      if (!wo)   { showError('กรุณากรอก Work Order'); return; }
+      if (!line) { showError('กรุณากรอก Line'); return; }
+
+      const zpl = buildZpl(scannedData, wo, line);
+      errorEl.style.display = 'none';
+
+      const btn = document.getElementById('btnPreview');
+      btn.textContent = 'Loading...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/zpl/preview', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ zpl, dpi, width, height })
+        });
+        if (!res.ok) { showError(`Error: ${res.status} ${res.statusText}`); return; }
+
+        const blob = await res.blob();
+        if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+        currentBlobUrl = URL.createObjectURL(blob);
+
+        previewImg.src = currentBlobUrl;
+        zplOutput.value = zpl;
+        previewResult.style.display = 'block';
+        hasPreviewedOnce = true;
+        setStep(3);
+        previewResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {
+        showError('ไม่สามารถเชื่อมต่อ API ได้: ' + e.message);
+      } finally {
+        btn.textContent = 'Preview';
+        btn.disabled = false;
+      }
+    }
+
+    function buildZpl(qrData, wo, line) {
+      const qrX    = +document.getElementById('qrX').value;
+      const qrY    = +document.getElementById('qrY').value;
+      const qrSize = +document.getElementById('qrSize').value;
+      const dataX  = +document.getElementById('dataX').value;
+      const dataY  = +document.getElementById('dataY').value;
+      const fs     = +document.getElementById('fontSize').value;
+      const lineH  = Math.round(fs * 1.4);
+
+      return `^XA
+^CI28
+^FO${qrX},${qrY}^BQN,2,${qrSize}^FDLA,${qrData}^FS
+^FO${dataX},${dataY}^A0N,${fs},${fs}^FD${qrData}^FS
+^FO${dataX},${dataY + lineH}^A0N,${fs},${fs}^FDW/O: ${wo}^FS
+^FO${dataX},${dataY + lineH * 2}^A0N,${fs},${fs}^FDLine: ${line}^FS
+^XZ`;
+    }
+
+    document.getElementById('btnDownload').addEventListener('click', () => {
+      if (!currentBlobUrl) return;
+      const a = document.createElement('a');
+      a.href = currentBlobUrl;
+      a.download = 'label.png';
+      a.click();
+    });
+
+    document.getElementById('btnCopyZpl').addEventListener('click', () => {
+      navigator.clipboard.writeText(zplOutput.value).then(() => {
+        const btn = document.getElementById('btnCopyZpl');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy ZPL', 1500);
+      });
+    });
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
