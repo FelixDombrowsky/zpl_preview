@@ -8,93 +8,77 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: sans-serif; background: #f5f5f5; }
 
-    /* Nav */
-    nav { background: #1565c0; display: flex; gap: 4px; padding: 0 16px; }
-    nav a {
-      color: #fff; text-decoration: none; padding: 14px 20px;
-      font-size: 0.95rem; opacity: 0.75; display: block;
-    }
+    nav { background: #1565c0; display: flex; gap: 4px; padding: 0 16px; flex-wrap: wrap; }
+    nav a { color: #fff; text-decoration: none; padding: 14px 20px; font-size: 0.95rem; opacity: 0.75; display: block; }
     nav a:hover { opacity: 1; background: rgba(255,255,255,0.1); }
     nav a.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: 600; }
 
-    .content { padding: 20px 24px; max-width: 720px; }
-    h1 { margin-bottom: 20px; font-size: 1.4rem; color: #333; }
+    .page-header { background: linear-gradient(135deg, #1a237e 0%, #1565c0 65%, #1976d2 100%); padding: 22px 28px; color: #fff; display: flex; align-items: center; gap: 14px; }
+    .page-header-icon { font-size: 2rem; background: rgba(255,255,255,0.15); border-radius: 12px; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .page-header h2 { font-size: 1.35rem; margin-bottom: 4px; }
+    .page-header p { font-size: 0.85rem; opacity: 0.75; }
 
-    /* Step indicator */
+    .page-tab-bar { background: #fff; display: flex; gap: 8px; padding: 12px 20px; border-bottom: 1px solid #e0e0e0; }
+    .page-tab { padding: 8px 18px; background: none; border: 1.5px solid transparent; border-radius: 8px; font-size: 0.9rem; cursor: pointer; color: #999; display: flex; align-items: center; gap: 6px; touch-action: manipulation; }
+    .page-tab:hover { color: #555; }
+    .page-tab.active { border-color: #1a237e; color: #1a237e; font-weight: 600; }
+
+    .content { padding: 20px 24px; max-width: 760px; }
+
+    /* Steps */
     .steps { display: flex; align-items: center; margin-bottom: 24px; }
     .step-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #aaa; }
     .step-item.active { color: #1565c0; font-weight: 600; }
     .step-item.done { color: #388e3c; }
-    .step-num {
-      width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ccc;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
-    }
+    .step-num { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
     .step-item.active .step-num { border-color: #1565c0; color: #1565c0; }
     .step-item.done .step-num { border-color: #388e3c; background: #388e3c; color: #fff; }
     .step-divider { flex: 1; height: 2px; background: #ddd; margin: 0 6px; max-width: 40px; }
     .step-divider.done { background: #388e3c; }
 
-    /* Scan step */
+    /* Scan */
     #stepScan { display: flex; flex-direction: column; align-items: center; padding: 16px 0; }
-    .scan-box {
-      width: 200px; height: 200px; border: 3px solid #1565c0; border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden; background: #fff; margin-bottom: 20px;
-    }
+    .scan-box { width: 200px; height: 200px; border: 3px solid #1565c0; border-radius: 16px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: #fff; margin-bottom: 20px; }
     .scan-box svg { width: 110px; height: 110px; opacity: 0.25; }
-    .scan-line {
-      position: absolute; left: 10px; right: 10px; height: 2px; background: #f44336;
-      top: 20px; animation: scanAnim 2s ease-in-out infinite;
-    }
+    .scan-line { position: absolute; left: 10px; right: 10px; height: 2px; background: #f44336; top: 20px; animation: scanAnim 2s ease-in-out infinite; }
     @keyframes scanAnim { 0% { top: 20px; } 50% { top: 170px; } 100% { top: 20px; } }
     .scan-hint { font-size: 0.9rem; color: #777; margin-bottom: 20px; }
 
-    /* Scanned badge */
-    .scanned-badge {
-      background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px;
-      padding: 10px 14px; margin-bottom: 18px; font-size: 0.9rem; color: #1565c0;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .scanned-badge strong { font-family: monospace; font-size: 1rem; }
-
-    /* Form */
-    .section-title {
-      font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.06em; color: #888; margin-bottom: 10px;
-    }
+    /* Forms */
+    .scanned-badge { background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 0.9rem; color: #1565c0; display: flex; align-items: center; gap: 8px; }
+    .scanned-badge strong { font-family: monospace; }
+    .section-title { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 10px; }
     .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 4px; }
-    select, input[type="number"], input[type="text"] {
-      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;
-      font-size: 1rem; background: #fff;
-    }
-    select:focus, input:focus {
-      outline: none; border-color: #1976d2; box-shadow: 0 0 0 2px rgba(25,118,210,0.15);
-    }
+    select, input[type="number"], input[type="text"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; background: #fff; }
+    select:focus, input:focus { outline: none; border-color: #1976d2; box-shadow: 0 0 0 2px rgba(25,118,210,0.15); }
 
-    /* Layout Editor */
-    .layout-section {
-      background: #fff; border: 1px solid #e0e0e0; border-radius: 10px;
-      padding: 16px; margin-bottom: 20px;
-    }
-    .layout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media (max-width: 480px) { .layout-grid { grid-template-columns: 1fr; } }
-    .layout-card { border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
-    .layout-card-header {
-      padding: 9px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
-    }
-    .qr-header { background: #fff3e0; color: #e65100; }
-    .data-header { background: #e8f5e9; color: #2e7d32; }
-    .layout-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
-    .slider-row { display: flex; flex-direction: column; gap: 4px; }
-    .slider-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #555; }
-    .slider-val {
-      background: #f0f0f0; border-radius: 4px; padding: 1px 7px;
-      font-family: monospace; font-size: 0.82rem; color: #333; min-width: 36px; text-align: center;
-    }
-    input[type="range"] { width: 100%; height: 6px; cursor: pointer; accent-color: #1976d2; padding: 8px 0; }
+    /* Layout Selector */
+    .layout-selector { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+    .layout-selector-row { display: flex; gap: 8px; align-items: center; }
+    .layout-selector-row select { flex: 1; }
+    .btn-outline-sm { padding: 9px 14px; background: #fff; border: 1.5px solid #1976d2; border-radius: 6px; font-size: 0.85rem; cursor: pointer; color: #1976d2; white-space: nowrap; touch-action: manipulation; }
+    .btn-outline-sm:disabled { border-color: #ccc; color: #bbb; cursor: default; }
+    .btn-outline-sm:not(:disabled):hover { background: #e3f2fd; }
+    .hint-link { font-size: 0.82rem; color: #aaa; margin-top: 8px; }
+    .hint-link a { color: #1976d2; text-decoration: none; }
+    .hint-link a:hover { text-decoration: underline; }
+
+    /* Data Split */
+    .data-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+    @media (max-width: 540px) { .data-split { grid-template-columns: 1fr; } }
+    .data-panel { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px; }
+    .data-panel-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+    #qrJsonOutput { width: 100%; height: 210px; padding: 8px 10px; border: 1px solid #eee; border-radius: 6px; font-family: monospace; font-size: 0.75rem; background: #f9f9f9; resize: none; color: #333; line-height: 1.5; }
+    .json-note { font-size: 0.72rem; color: #bbb; margin-top: 6px; }
+    .field-check-list { display: flex; flex-direction: column; gap: 6px; }
+    .field-check-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 7px; background: #f9f9f9; cursor: pointer; transition: background 0.15s; }
+    .field-check-item:hover { background: #f0f4ff; }
+    .field-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1976d2; cursor: pointer; flex-shrink: 0; }
+    .field-check-item .fci-label { font-size: 0.88rem; color: #333; flex: 1; cursor: pointer; }
+    .field-check-item .fci-value { font-size: 0.72rem; color: #aaa; font-family: monospace; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .field-check-empty { font-size: 0.85rem; color: #bbb; text-align: center; padding: 20px 0; }
 
     /* Buttons */
     .btn-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -104,16 +88,11 @@
     .btn-primary:disabled { background: #90caf9; cursor: default; }
     .btn-secondary { background: #e0e0e0; color: #333; }
     .btn-secondary:hover { background: #bdbdbd; }
-    .btn-success { background: #388e3c; color: #fff; }
-    .btn-success:hover { background: #2e7d32; }
-
-    /* Auto-refresh indicator */
-    #refreshBadge {
-      display: none; align-items: center; gap: 6px;
-      background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px;
-      padding: 8px 12px; font-size: 0.85rem; color: #f57f17; margin-bottom: 14px;
-    }
-    #refreshBadge.show { display: flex; }
+    .btn-sm { padding: 5px 12px; font-size: 0.8rem; border-radius: 5px; border: none; cursor: pointer; }
+    .btn-sm-success { background: #388e3c; color: #fff; }
+    .btn-sm-success:hover { background: #2e7d32; }
+    .btn-sm-secondary { background: #e0e0e0; color: #333; }
+    .btn-sm-secondary:hover { background: #bdbdbd; }
 
     /* Preview result */
     .divider { border: none; border-top: 1px solid #e0e0e0; margin: 20px 0; }
@@ -121,48 +100,69 @@
     .result-label { font-size: 0.82rem; font-weight: 700; color: #555; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
     .result-label-row { display: flex; justify-content: flex-end; align-items: center; margin-bottom: 8px; }
     .tab-bar { display: flex; border-bottom: 2px solid #e0e0e0; margin-bottom: 16px; }
-    .tab {
-      padding: 10px 20px; background: none; border: none; cursor: pointer;
-      font-size: 0.95rem; color: #999; border-bottom: 2px solid transparent;
-      margin-bottom: -2px; touch-action: manipulation;
-    }
+    .tab { padding: 10px 20px; background: none; border: none; cursor: pointer; font-size: 0.95rem; color: #999; border-bottom: 2px solid transparent; margin-bottom: -2px; touch-action: manipulation; }
     .tab:hover { color: #555; }
     .tab.active { color: #1565c0; border-bottom-color: #1565c0; font-weight: 600; }
-    .btn-sm { padding: 5px 12px; font-size: 0.8rem; border-radius: 5px; border: none; cursor: pointer; touch-action: manipulation; }
-    .btn-sm-success { background: #388e3c; color: #fff; }
-    .btn-sm-success:hover { background: #2e7d32; }
-    .btn-sm-secondary { background: #e0e0e0; color: #333; }
-    .btn-sm-secondary:hover { background: #bdbdbd; }
     #previewImg { max-width: 100%; border: 1px solid #ccc; background: #fff; display: block; margin-bottom: 16px; border-radius: 4px; }
-    #zplOutput {
-      width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc;
-      border-radius: 4px; font-family: monospace; font-size: 0.8rem;
-      background: #fafafa; resize: vertical; margin-bottom: 12px;
-    }
+    #zplOutput { width: 100%; height: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; font-size: 0.8rem; background: #fafafa; resize: vertical; margin-bottom: 12px; }
     #error { color: #c62828; font-size: 0.9rem; margin-bottom: 12px; display: none; }
-
-    /* Printer inline (inside preview result) */
     .printer-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
     .printer-row select { flex: 1; }
 
-    /* Success overlay */
-    #printOverlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,0.45); z-index: 999;
-      align-items: center; justify-content: center;
-    }
+    /* Design Layout */
+    .design-list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .design-list-header h2 { font-size: 1.2rem; color: #333; }
+    .lci { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .lci:hover { border-color: #90caf9; }
+    .lci-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .lci-center { flex: 1; min-width: 0; }
+    .lci-name { font-weight: 700; color: #222; margin-bottom: 2px; }
+    .lci-desc { font-size: 0.85rem; color: #777; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lci-date { font-size: 0.75rem; color: #bbb; margin-top: 3px; }
+    .lci-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .lci-actions button { padding: 7px 14px; font-size: 0.82rem; border-radius: 6px; border: none; cursor: pointer; }
+    .btn-edit-sm { background: #e3f2fd; color: #1565c0; }
+    .btn-edit-sm:hover { background: #bbdefb; }
+    .btn-del-sm { background: #ffebee; color: #c62828; }
+    .btn-del-sm:hover { background: #ffcdd2; }
+    #layoutEmpty { text-align: center; padding: 48px 0; color: #bbb; }
+    #layoutEmpty p { margin-bottom: 6px; font-size: 0.95rem; }
+    .edit-top { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .edit-top h2 { font-size: 1.15rem; color: #333; }
+    .btn-back { padding: 8px 14px; background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px; font-size: 0.85rem; cursor: pointer; color: #555; white-space: nowrap; }
+    .btn-back:hover { background: #e8e8e8; }
+    .edit-meta { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 12px; }
+    .edit-meta input { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; width: 100%; }
+    .edit-meta input:focus { outline: none; border-color: #1976d2; box-shadow: 0 0 0 2px rgba(25,118,210,0.15); }
+    .design-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+    @media (max-width: 560px) { .design-container { grid-template-columns: 1fr; } }
+    .layout-section { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
+    .layout-card { border-bottom: 1px solid #e0e0e0; }
+    .layout-card:last-child { border-bottom: none; }
+    .layout-card-header { padding: 9px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .qr-header { background: #fff3e0; color: #e65100; }
+    .data-header { background: #e8f5e9; color: #2e7d32; }
+    .layout-card-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+    .slider-row { display: flex; flex-direction: column; gap: 4px; }
+    .slider-label { display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #555; }
+    .slider-val { background: #f0f0f0; border-radius: 4px; padding: 1px 7px; font-family: monospace; font-size: 0.82rem; color: #333; min-width: 36px; text-align: center; }
+    input[type="range"] { width: 100%; height: 6px; cursor: pointer; accent-color: #1976d2; padding: 8px 0; }
+    .design-preview-area { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; position: sticky; top: 16px; }
+    .design-preview-hint { color: #bbb; font-size: 0.85rem; text-align: center; padding: 40px 0; }
+    #designPreviewImg { max-width: 100%; border: 1px solid #eee; border-radius: 4px; display: none; }
+    .design-dim-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .design-refresh-badge { display: none; align-items: center; gap: 6px; background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 7px 12px; font-size: 0.82rem; color: #f57f17; margin-bottom: 12px; }
+    .design-refresh-badge.show { display: flex; }
+    .design-fields-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; margin-top: 12px; }
+    .design-fields-header { padding: 9px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; background: #f3e5f5; color: #6a1b9a; }
+    .design-fields-body { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
+
+    /* Print Success */
+    #printOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; align-items: center; justify-content: center; }
     #printOverlay.show { display: flex; }
-    #printOverlayBox {
-      background: #fff; border-radius: 20px; padding: 44px 52px;
-      text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-      animation: popIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
-    }
+    #printOverlayBox { background: #fff; border-radius: 20px; padding: 44px 52px; text-align: center; box-shadow: 0 12px 40px rgba(0,0,0,0.2); animation: popIn 0.22s cubic-bezier(0.34,1.56,0.64,1); }
     @keyframes popIn { from { transform: scale(0.75); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-    .print-check {
-      width: 72px; height: 72px; background: #43a047; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 18px; font-size: 2.2rem; color: #fff;
-    }
+    .print-check { width: 72px; height: 72px; background: #43a047; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 2.2rem; color: #fff; }
     #printOverlayBox p { font-size: 1.4rem; font-weight: 700; color: #222; }
   </style>
 </head>
@@ -170,11 +170,25 @@
   <nav>
     <a href="/">ZPL Label Preview</a>
     <a href="/generate-qr.html" class="active">Generate New QR</a>
+    <a href="/receive.html">Receive</a>
+    <a href="/move.html">Move</a>
   </nav>
 
-  <div class="content">
-    <h1>Generate New QR</h1>
+  <div class="page-header">
+    <div class="page-header-icon">🖨️</div>
+    <div>
+      <h2>Generate New QR</h2>
+      <p>สร้างและพิมพ์ QR Code สำหรับ Lot ในระบบ</p>
+    </div>
+  </div>
 
+  <div class="page-tab-bar">
+    <button class="page-tab active" id="ptabPrint">🖨️ Print QR-Code</button>
+    <button class="page-tab" id="ptabDesign">🎨 Design Layout</button>
+  </div>
+
+  <!-- ══ Print QR-Code Panel ══ -->
+  <div id="pagePrint" class="content">
     <div class="steps">
       <div class="step-item active" id="si1"><div class="step-num">1</div><span>Scan QR</span></div>
       <div class="step-divider" id="sd1"></div>
@@ -183,147 +197,87 @@
       <div class="step-item" id="si3"><div class="step-num">3</div><span>Preview</span></div>
     </div>
 
-    <!-- Step 1: Scan -->
+    <!-- Step 1 -->
     <div id="stepScan">
       <div class="scan-box">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="10" y="10" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/>
-          <rect x="18" y="18" width="14" height="14" fill="#333"/>
-          <rect x="60" y="10" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/>
-          <rect x="68" y="18" width="14" height="14" fill="#333"/>
-          <rect x="10" y="60" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/>
-          <rect x="18" y="68" width="14" height="14" fill="#333"/>
-          <rect x="60" y="60" width="8" height="8" fill="#333"/>
-          <rect x="72" y="60" width="8" height="8" fill="#333"/>
-          <rect x="84" y="60" width="8" height="8" fill="#333"/>
-          <rect x="60" y="72" width="8" height="8" fill="#333"/>
-          <rect x="76" y="76" width="16" height="8" fill="#333"/>
-          <rect x="84" y="68" width="8" height="8" fill="#333"/>
-        </svg>
+        <svg viewBox="0 0 100 100" fill="none"><rect x="10" y="10" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/><rect x="18" y="18" width="14" height="14" fill="#333"/><rect x="60" y="10" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/><rect x="68" y="18" width="14" height="14" fill="#333"/><rect x="10" y="60" width="30" height="30" rx="3" stroke="#333" stroke-width="6"/><rect x="18" y="68" width="14" height="14" fill="#333"/><rect x="60" y="60" width="8" height="8" fill="#333"/><rect x="72" y="60" width="8" height="8" fill="#333"/><rect x="84" y="60" width="8" height="8" fill="#333"/><rect x="60" y="72" width="8" height="8" fill="#333"/><rect x="76" y="76" width="16" height="8" fill="#333"/><rect x="84" y="68" width="8" height="8" fill="#333"/></svg>
         <div class="scan-line"></div>
       </div>
       <p class="scan-hint">กดปุ่มด้านล่างเพื่อสแกน QR Code</p>
       <button class="btn-primary" id="btnScan">Scan QR Code</button>
     </div>
 
-    <!-- Step 2: Form -->
+    <!-- Step 2 -->
     <div id="stepForm" style="display:none">
       <div class="scanned-badge">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1565c0" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
         QR Data: <strong id="qrDataDisplay"></strong>
       </div>
 
+      <!-- Layout Selector -->
+      <div class="layout-selector">
+        <p class="section-title" style="margin-bottom:10px">เลือก Layout</p>
+        <div class="layout-selector-row">
+          <select id="layoutSelect"><option value="">-- เลือก Layout --</option></select>
+          <button class="btn-outline-sm" id="btnCustomize" disabled>✏️ Customize</button>
+        </div>
+        <p class="hint-link" id="layoutHint"></p>
+      </div>
+
+      <!-- Label Size -->
       <p class="section-title">ตั้งค่า Label</p>
       <div class="form-grid">
-        <div>
-          <label for="dpi">DPI</label>
-          <select id="dpi">
-            <option value="8dpmm">8 dpmm (203 dpi)</option>
-            <option value="12dpmm">12 dpmm (300 dpi)</option>
-            <option value="24dpmm">24 dpmm (600 dpi)</option>
-          </select>
+        <div><label for="dpi">DPI</label>
+          <select id="dpi"><option value="8dpmm">8 dpmm (203 dpi)</option><option value="12dpmm">12 dpmm (300 dpi)</option><option value="24dpmm">24 dpmm (600 dpi)</option></select>
         </div>
-        <div>
-          <label for="width">Width (inch)</label>
-          <input type="number" id="width" value="4" min="0.1" step="0.1" />
-        </div>
-        <div>
-          <label for="height">Height (inch)</label>
-          <input type="number" id="height" value="3" min="0.1" step="0.1" />
-        </div>
+        <div><label for="width">Width (inch)</label><input type="number" id="width" value="4" min="0.1" step="0.1" /></div>
+        <div><label for="height">Height (inch)</label><input type="number" id="height" value="3" min="0.1" step="0.1" /></div>
       </div>
 
+      <!-- W/O + Line -->
       <div class="form-grid-2">
-        <div>
-          <label for="wo">Work Order (W/O)</label>
-          <input type="text" id="wo" placeholder="เช่น 14955651" />
-        </div>
-        <div>
-          <label for="line">Line</label>
-          <input type="text" id="line" placeholder="เช่น STF-108" />
-        </div>
+        <div><label for="wo">Work Order (W/O)</label><input type="text" id="wo" placeholder="เช่น 14955651" /></div>
+        <div><label for="line">Line</label><input type="text" id="line" placeholder="เช่น STF-108" /></div>
       </div>
 
-      <!-- Layout Editor -->
-      <div class="layout-section">
-        <p class="section-title" style="margin-bottom:12px">ปรับ Layout</p>
-        <div class="layout-grid">
-
-          <!-- QR Component -->
-          <div class="layout-card">
-            <div class="layout-card-header qr-header">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/>
-              </svg>
-              QR Component
-            </div>
-            <div class="layout-card-body">
-              <div class="slider-row">
-                <div class="slider-label"><span>ตำแหน่ง X</span><span class="slider-val" id="qrXVal">60</span></div>
-                <input type="range" id="qrX" min="0" max="700" value="60" />
-              </div>
-              <div class="slider-row">
-                <div class="slider-label"><span>ตำแหน่ง Y</span><span class="slider-val" id="qrYVal">40</span></div>
-                <input type="range" id="qrY" min="0" max="500" value="40" />
-              </div>
-              <div class="slider-row">
-                <div class="slider-label"><span>ขนาด QR</span><span class="slider-val" id="qrSizeVal">6</span></div>
-                <input type="range" id="qrSize" min="2" max="10" value="6" />
-              </div>
-            </div>
+      <!-- ── Data Split ── -->
+      <div class="data-split">
+        <!-- Left: QR JSON -->
+        <div class="data-panel">
+          <div class="data-panel-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
+            ข้อมูลใน QR Code
           </div>
+          <textarea id="qrJsonOutput" readonly></textarea>
+          <p class="json-note">* traceId จะถูกสร้างอัตโนมัติเมื่อกด Preview</p>
+        </div>
 
-          <!-- Data Component -->
-          <div class="layout-card">
-            <div class="layout-card-header data-header">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="14" y2="18"/>
-              </svg>
-              Data Component
-            </div>
-            <div class="layout-card-body">
-              <div class="slider-row">
-                <div class="slider-label"><span>ตำแหน่ง X</span><span class="slider-val" id="dataXVal">320</span></div>
-                <input type="range" id="dataX" min="0" max="700" value="320" />
-              </div>
-              <div class="slider-row">
-                <div class="slider-label"><span>ตำแหน่ง Y</span><span class="slider-val" id="dataYVal">30</span></div>
-                <input type="range" id="dataY" min="0" max="500" value="30" />
-              </div>
-              <div class="slider-row">
-                <div class="slider-label"><span>ขนาด Font</span><span class="slider-val" id="fontSizeVal">28</span></div>
-                <input type="range" id="fontSize" min="16" max="60" value="28" />
-              </div>
-            </div>
+        <!-- Right: Label Checklist -->
+        <div class="data-panel">
+          <div class="data-panel-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ข้อมูลที่แสดงบน Label
           </div>
-
+          <div class="field-check-list" id="fieldChecklist">
+            <p class="field-check-empty">Scan QR เพื่อดูข้อมูล</p>
+          </div>
         </div>
       </div>
 
-      <div id="refreshBadge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.82"/></svg>
-        Layout เปลี่ยนแล้ว — กำลัง refresh preview...
-      </div>
       <div id="error"></div>
-
       <div class="btn-row">
         <button class="btn-primary" id="btnPreview">Preview</button>
         <button class="btn-secondary" id="btnBack">Back</button>
       </div>
 
-      <!-- Preview Result -->
+      <!-- Step 3: Preview Result -->
       <div id="previewResult">
         <hr class="divider" />
         <div class="tab-bar">
           <button class="tab active" id="tabPreview">Label Preview</button>
           <button class="tab" id="tabZpl">ZPL Code</button>
         </div>
-
-        <div id="panelPreview">
-          <img id="previewImg" alt="Label preview" />
-        </div>
-
+        <div id="panelPreview"><img id="previewImg" alt="Label preview" /></div>
         <div id="panelZpl" style="display:none">
           <div class="result-label-row">
             <button class="btn-sm btn-sm-success" id="btnDownload">Download PNG</button>
@@ -331,7 +285,6 @@
           </div>
           <textarea id="zplOutput" readonly></textarea>
         </div>
-
         <hr class="divider" />
         <p class="result-label">เลือก Printer</p>
         <div class="printer-row">
@@ -346,7 +299,85 @@
     </div>
   </div>
 
-  <!-- Print success overlay -->
+  <!-- ══ Design Layout Panel ══ -->
+  <div id="pageDesign" style="display:none; padding:20px 24px; max-width:900px">
+    <div id="designList">
+      <div class="design-list-header">
+        <h2>Saved Layouts</h2>
+        <button class="btn-primary" id="btnNewLayout">+ New Layout</button>
+      </div>
+      <div id="layoutCardGrid"></div>
+      <div id="layoutEmpty"><p>ยังไม่มี Layout ที่บันทึกไว้</p><p style="font-size:0.82rem">กด "New Layout" เพื่อสร้างใหม่</p></div>
+    </div>
+
+    <div id="designEdit" style="display:none">
+      <div class="edit-top">
+        <button class="btn-back" id="btnBackEdit">← Back</button>
+        <h2 id="editTitle">New Layout</h2>
+      </div>
+      <div class="edit-meta">
+        <div><label>Template Name *</label><input type="text" id="editName" placeholder="เช่น Standard 4x3" /></div>
+        <div><label>Description</label><input type="text" id="editDesc" placeholder="(optional)" /></div>
+      </div>
+      <div class="design-container">
+        <div>
+          <div class="section-title" style="margin-bottom:12px">ปรับ Layout</div>
+          <div class="layout-section" id="designSliders">
+            <div class="layout-card">
+              <div class="layout-card-header qr-header">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
+                QR Component
+              </div>
+              <div class="layout-card-body">
+                <div class="slider-row"><div class="slider-label"><span>ตำแหน่ง X</span><span class="slider-val" id="qrXVal">60</span></div><input type="range" id="qrX" min="0" max="700" value="60" /></div>
+                <div class="slider-row"><div class="slider-label"><span>ตำแหน่ง Y</span><span class="slider-val" id="qrYVal">40</span></div><input type="range" id="qrY" min="0" max="500" value="40" /></div>
+                <div class="slider-row"><div class="slider-label"><span>ขนาด QR</span><span class="slider-val" id="qrSizeVal">6</span></div><input type="range" id="qrSize" min="2" max="10" value="6" /></div>
+              </div>
+            </div>
+            <div class="layout-card">
+              <div class="layout-card-header data-header">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="14" y2="18"/></svg>
+                Data Component
+              </div>
+              <div class="layout-card-body">
+                <div class="slider-row"><div class="slider-label"><span>ตำแหน่ง X</span><span class="slider-val" id="dataXVal">320</span></div><input type="range" id="dataX" min="0" max="700" value="320" /></div>
+                <div class="slider-row"><div class="slider-label"><span>ตำแหน่ง Y</span><span class="slider-val" id="dataYVal">30</span></div><input type="range" id="dataY" min="0" max="500" value="30" /></div>
+                <div class="slider-row"><div class="slider-label"><span>ขนาด Font</span><span class="slider-val" id="fontSizeVal">28</span></div><input type="range" id="fontSize" min="16" max="60" value="28" /></div>
+                <div class="slider-row"><div class="slider-label"><span>Value Offset</span><span class="slider-val" id="valOffsetVal">120</span></div><input type="range" id="valOffset" min="40" max="350" value="120" /></div>
+              </div>
+            </div>
+          </div>
+          <!-- Fields to show on label -->
+          <div class="design-fields-card">
+            <div class="design-fields-header">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              Fields to show on label
+            </div>
+            <div class="design-fields-body" id="designFieldChecklist"></div>
+          </div>
+        </div>
+        <div class="design-preview-area">
+          <p class="result-label" style="margin-bottom:10px">Preview (Sample Data)</p>
+          <div class="design-dim-grid">
+            <div><label for="designDpi" style="font-size:0.78rem">DPI</label><select id="designDpi" style="padding:6px;font-size:0.85rem"><option value="8dpmm">8 dpmm</option><option value="12dpmm">12 dpmm</option><option value="24dpmm">24 dpmm</option></select></div>
+            <div><label for="designWidth" style="font-size:0.78rem">Width</label><input type="number" id="designWidth" value="4" min="0.1" step="0.1" style="padding:6px;font-size:0.85rem" /></div>
+            <div><label for="designHeight" style="font-size:0.78rem">Height</label><input type="number" id="designHeight" value="3" min="0.1" step="0.1" style="padding:6px;font-size:0.85rem" /></div>
+          </div>
+          <div class="design-refresh-badge" id="designRefreshBadge">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.82"/></svg>
+            กำลัง refresh...
+          </div>
+          <p class="design-preview-hint" id="designPreviewHint">ขยับ slider เพื่อดู preview</p>
+          <img id="designPreviewImg" alt="Design preview" />
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn-primary" id="btnSaveLayout">Save Layout</button>
+        <button class="btn-secondary" id="btnApplyToPrint" style="display:none">← Apply to Print</button>
+      </div>
+    </div>
+  </div>
+
   <div id="printOverlay">
     <div id="printOverlayBox">
       <div class="print-check">✓</div>
@@ -355,22 +386,52 @@
   </div>
 
   <script>
-    const MOCK_QR_DATA = 'SAMPLE-QR-001';
+    // ── Mock Data ─────────────────────────────────────────
+    const MOCK_QR_OBJ = {
+      'PLANT':  'DFB2',
+      'VENDOR': '676742',
+      'P/N':    '3475221400',
+      'QTY':    500,
+      'D/C':    '260501 Rev.04'
+    };
+    const FIELD_LABELS = {
+      'PLANT':     'PLANT',
+      'VENDOR':    'VENDOR',
+      'P/N':       'P/N',
+      'QTY':       'QTY',
+      'D/C':       'D/C',
+      'W/O':       'W/O',
+      'LINE':      'LINE',
+      'createdAt': 'Created At'
+    };
+    // Sanitize key → valid DOM id (replace non-alphanumeric with _)
+    const cid = k => k.replace(/[^a-zA-Z0-9]/g, '_');
 
-    let scannedData = '';
-    let currentBlobUrl = null;
-    let hasPreviewedOnce = false;
-    let debounceTimer = null;
+    // ── State ─────────────────────────────────────────────
+    let printState = {
+      scannedData: '',
+      parsedQrData: {},
+      selectedLayoutId: null,
+      hasPreviewedOnce: false,
+    };
+    let ds = { mode: 'list', editId: null, fromPrint: false, layouts: [], pendingFields: null };
+    let designTimer = null, designBlobUrl = null, currentBlobUrl = null;
 
-    const stepScan     = document.getElementById('stepScan');
-    const stepForm     = document.getElementById('stepForm');
-    const previewResult = document.getElementById('previewResult');
-    const previewImg   = document.getElementById('previewImg');
-    const zplOutput    = document.getElementById('zplOutput');
-    const errorEl      = document.getElementById('error');
-    const refreshBadge = document.getElementById('refreshBadge');
+    // ── Page Tabs ─────────────────────────────────────────
+    document.getElementById('ptabPrint').addEventListener('click', () => setPageTab('print'));
+    document.getElementById('ptabDesign').addEventListener('click', () => {
+      setPageTab('design');
+      if (ds.mode === 'list') loadLayouts();
+    });
+    function setPageTab(tab) {
+      const isPrint = tab === 'print';
+      document.getElementById('ptabPrint').classList.toggle('active', isPrint);
+      document.getElementById('ptabDesign').classList.toggle('active', !isPrint);
+      document.getElementById('pagePrint').style.display = isPrint ? 'block' : 'none';
+      document.getElementById('pageDesign').style.display = isPrint ? 'none' : 'block';
+    }
 
-    // Step indicator
+    // ── Step Indicator ────────────────────────────────────
     function setStep(n) {
       [1,2,3].forEach(i => {
         const si = document.getElementById('si'+i);
@@ -381,178 +442,465 @@
       });
     }
 
-    // Sliders
-    function bindSlider(id, valId) {
-      const slider = document.getElementById(id);
-      const display = document.getElementById(valId);
-      slider.addEventListener('input', () => {
-        display.textContent = slider.value;
-        onLayoutChange();
-      });
-    }
-    bindSlider('qrX', 'qrXVal');
-    bindSlider('qrY', 'qrYVal');
-    bindSlider('qrSize', 'qrSizeVal');
-    bindSlider('dataX', 'dataXVal');
-    bindSlider('dataY', 'dataYVal');
-    bindSlider('fontSize', 'fontSizeVal');
-
-    function onLayoutChange() {
-      if (!hasPreviewedOnce) return;
-      refreshBadge.classList.add('show');
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        refreshBadge.classList.remove('show');
-        doPreview();
-      }, 900);
-    }
-
-    // Step 1 → 2
+    // ── Scan ──────────────────────────────────────────────
     document.getElementById('btnScan').addEventListener('click', () => {
-      scannedData = MOCK_QR_DATA;
-      document.getElementById('qrDataDisplay').textContent = scannedData;
-      stepScan.style.display = 'none';
-      stepForm.style.display = 'block';
-      previewResult.style.display = 'none';
-      hasPreviewedOnce = false;
+      printState.parsedQrData = { ...MOCK_QR_OBJ };
+      printState.scannedData = JSON.stringify(printState.parsedQrData);
+      document.getElementById('qrDataDisplay').textContent = printState.parsedQrData.lotNo || printState.scannedData;
+      document.getElementById('stepScan').style.display = 'none';
+      document.getElementById('stepForm').style.display = 'block';
+      document.getElementById('previewResult').style.display = 'none';
       document.getElementById('btnPrint').disabled = true;
+      printState.hasPreviewedOnce = false;
       setStep(2);
+      loadLayoutDropdown();
+      updateDataPanel();
     });
 
     document.getElementById('btnBack').addEventListener('click', () => {
-      stepForm.style.display = 'none';
-      stepScan.style.display = 'flex';
-      previewResult.style.display = 'none';
-      hasPreviewedOnce = false;
+      document.getElementById('stepForm').style.display = 'none';
+      document.getElementById('stepScan').style.display = 'flex';
+      document.getElementById('previewResult').style.display = 'none';
+      printState.hasPreviewedOnce = false;
       setStep(1);
     });
 
+    // Update data panel when W/O or Line changes
+    document.getElementById('wo').addEventListener('input', updateDataPanel);
+    document.getElementById('line').addEventListener('input', updateDataPanel);
+
+    // ── Data Panel ────────────────────────────────────────
+    function updateDataPanel() {
+      const wo = document.getElementById('wo').value.trim();
+      const line = document.getElementById('line').value.trim();
+
+      // Full data (without traceId)
+      const fullData = { ...printState.parsedQrData };
+      if (wo) fullData['W/O'] = wo;
+      if (line) fullData['LINE'] = line;
+      fullData.createdAt = '(auto-generated)';
+
+      // JSON preview with placeholder
+      const preview = { ...fullData, traceId: '(auto-generated)' };
+      document.getElementById('qrJsonOutput').value = JSON.stringify(preview, null, 2);
+
+      // Render checklist
+      renderChecklist(fullData);
+    }
+
+    function renderChecklist(data) {
+      const container = document.getElementById('fieldChecklist');
+      const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== '');
+      if (entries.length === 0) {
+        container.innerHTML = '<p class="field-check-empty">ไม่มีข้อมูล</p>';
+        return;
+      }
+      container.innerHTML = entries.map(([k, v]) =>
+        `<div class="field-check-item">
+          <input type="checkbox" id="chk_${cid(k)}" data-key="${escHtml(k)}" checked />
+          <label class="fci-label" for="chk_${cid(k)}">${FIELD_LABELS[k] || k}</label>
+          <span class="fci-value">${escHtml(String(v))}</span>
+        </div>`
+      ).join('');
+    }
+
+    function getCheckedFields(data) {
+      return Object.entries(data)
+        .filter(([k, v]) => {
+          if (v === null || v === undefined || v === '') return false;
+          const cb = document.getElementById('chk_' + cid(k));
+          return cb ? cb.checked : false;
+        })
+        .map(([k, v]) => ({ label: FIELD_LABELS[k] || k, value: String(v) }));
+    }
+
+    // ── Layout Dropdown ───────────────────────────────────
+    async function loadLayoutDropdown() {
+      const sel = document.getElementById('layoutSelect');
+      const hint = document.getElementById('layoutHint');
+      try {
+        const res = await fetch('/api/layouts');
+        const layouts = await res.json();
+        sel.innerHTML = '<option value="">-- เลือก Layout --</option>';
+        layouts.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l.id;
+          opt.textContent = l.templateName;
+          opt.setAttribute('data-layout', JSON.stringify(l));
+          sel.appendChild(opt);
+        });
+        hint.innerHTML = layouts.length === 0
+          ? 'ยังไม่มี Layout — <a href="#" id="linkGoDesign">ไปสร้างที่ Design Layout</a>'
+          : '';
+        document.getElementById('linkGoDesign')?.addEventListener('click', e => {
+          e.preventDefault(); openCreateMode(true);
+        });
+      } catch { hint.textContent = 'โหลด layout ไม่ได้'; }
+    }
+
+    document.getElementById('layoutSelect').addEventListener('change', function() {
+      const opt = this.options[this.selectedIndex];
+      const btn = document.getElementById('btnCustomize');
+      if (this.value) {
+        applyLayoutToSliders(JSON.parse(opt.getAttribute('data-layout')));
+        printState.selectedLayoutId = +this.value;
+        btn.disabled = false;
+      } else {
+        printState.selectedLayoutId = null;
+        btn.disabled = true;
+      }
+    });
+
+    document.getElementById('btnCustomize').addEventListener('click', () => {
+      const sel = document.getElementById('layoutSelect');
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt.value) return;
+      ds.pendingFields = getCheckedKeysFromPrintList();
+      openEditMode(JSON.parse(opt.getAttribute('data-layout')), true);
+    });
+
+    // ── Preview ───────────────────────────────────────────
     document.getElementById('btnPreview').addEventListener('click', doPreview);
 
     async function doPreview() {
-      const wo   = document.getElementById('wo').value.trim();
+      const wo = document.getElementById('wo').value.trim();
       const line = document.getElementById('line').value.trim();
-      const dpi    = document.getElementById('dpi').value;
-      const width  = document.getElementById('width').value;
-      const height = document.getElementById('height').value;
-
+      const dpi = document.getElementById('dpi').value;
+      const w = document.getElementById('width').value;
+      const h = document.getElementById('height').value;
+      const errorEl = document.getElementById('error');
       if (!wo)   { showError('กรุณากรอก Work Order'); return; }
       if (!line) { showError('กรุณากรอก Line'); return; }
-
-      const zpl = buildZpl(scannedData, wo, line);
       errorEl.style.display = 'none';
 
-      const btn = document.getElementById('btnPreview');
-      btn.textContent = 'Loading...';
-      btn.disabled = true;
+      // Mock traceId
+      const traceId = `TRC-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.random().toString(36).slice(2,10).toUpperCase()}`;
 
+      // Build full QR data
+      const fullData = { ...printState.parsedQrData };
+      if (wo) fullData['W/O'] = wo;
+      if (line) fullData['LINE'] = line;
+      fullData.traceId = traceId;
+      fullData.createdAt = new Date().toISOString().slice(0,10).replace(/-/g,'');
+
+      // Update JSON display with actual values
+      document.getElementById('qrJsonOutput').value = JSON.stringify(fullData, null, 2);
+
+      // Get selected label fields (exclude traceId from label display)
+      const dataForLabel = { ...fullData };
+      delete dataForLabel.traceId;
+      const labelFields = getCheckedFields(dataForLabel);
+
+      const zpl = buildZpl({ qrContent: JSON.stringify(fullData), textFields: labelFields });
+
+      const btn = document.getElementById('btnPreview');
+      btn.textContent = 'Loading...'; btn.disabled = true;
       try {
         const res = await fetch('/api/zpl/preview', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ zpl, dpi, width, height })
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ zpl, dpi, width: w, height: h })
         });
-        if (!res.ok) { showError(`Error: ${res.status} ${res.statusText}`); return; }
-
+        if (!res.ok) { showError(`Error: ${res.status}`); return; }
         const blob = await res.blob();
         if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
         currentBlobUrl = URL.createObjectURL(blob);
-
-        previewImg.src = currentBlobUrl;
-        zplOutput.value = zpl;
-        previewResult.style.display = 'block';
-        hasPreviewedOnce = true;
+        document.getElementById('previewImg').src = currentBlobUrl;
+        document.getElementById('zplOutput').value = zpl;
+        document.getElementById('previewResult').style.display = 'block';
+        printState.hasPreviewedOnce = true;
         updatePrintButton();
         setStep(3);
-        previewResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } catch (e) {
-        showError('ไม่สามารถเชื่อมต่อ API ได้: ' + e.message);
-      } finally {
-        btn.textContent = 'Preview';
-        btn.disabled = false;
-      }
+        document.getElementById('previewResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch(e) { showError('ไม่สามารถเชื่อมต่อ API: ' + e.message);
+      } finally { btn.textContent = 'Preview'; btn.disabled = false; }
     }
 
-    function buildZpl(qrData, wo, line) {
-      const qrX    = +document.getElementById('qrX').value;
-      const qrY    = +document.getElementById('qrY').value;
+    // ── Build ZPL ─────────────────────────────────────────
+    function buildZpl({ qrContent, textFields }) {
+      const qrX = +document.getElementById('qrX').value;
+      const qrY = +document.getElementById('qrY').value;
       const qrSize = +document.getElementById('qrSize').value;
-      const dataX  = +document.getElementById('dataX').value;
-      const dataY  = +document.getElementById('dataY').value;
-      const fs     = +document.getElementById('fontSize').value;
-      const lineH  = Math.round(fs * 1.4);
-
-      const now = new Date();
-      const printDate = `${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
-
-      return `^XA
-^CI28
-^FO${qrX},${qrY}^BQN,2,${qrSize}^FDLA,${qrData}^FS
-^FO${dataX},${dataY}^A0N,${fs},${fs}^FD${qrData}^FS
-^FO${dataX},${dataY + lineH}^A0N,${fs},${fs}^FDW/O: ${wo}^FS
-^FO${dataX},${dataY + lineH * 2}^A0N,${fs},${fs}^FDLine: ${line}^FS
-^FO${dataX},${dataY + lineH * 3}^A0N,${fs},${fs}^FDDate: ${printDate}^FS
-^XZ`;
+      const dataX = +document.getElementById('dataX').value;
+      const dataY = +document.getElementById('dataY').value;
+      const fs = +document.getElementById('fontSize').value;
+      const vo = +document.getElementById('valOffset').value;
+      const lh = Math.round(fs * 1.5);
+      let zpl = `^XA\n^CI28\n`;
+      zpl += `^FO${qrX},${qrY}^BQN,2,${qrSize}^FDLA,${qrContent}^FS\n`;
+      textFields.forEach((f, i) => {
+        const y = dataY + i * lh;
+        zpl += `^FO${dataX},${y}^A0N,${fs},${fs}^FD${f.label}:^FS\n`;
+        zpl += `^FO${dataX + vo},${y}^A0N,${fs},${fs}^FD${f.value}^FS\n`;
+      });
+      return zpl + `^XZ`;
     }
 
+    // ── Result Tabs ───────────────────────────────────────
+    document.getElementById('tabPreview').addEventListener('click', () => switchResultTab('preview'));
+    document.getElementById('tabZpl').addEventListener('click', () => switchResultTab('zpl'));
+    function switchResultTab(tab) {
+      const isP = tab === 'preview';
+      document.getElementById('tabPreview').classList.toggle('active', isP);
+      document.getElementById('tabZpl').classList.toggle('active', !isP);
+      document.getElementById('panelPreview').style.display = isP ? 'block' : 'none';
+      document.getElementById('panelZpl').style.display = isP ? 'none' : 'block';
+    }
     document.getElementById('btnDownload').addEventListener('click', () => {
       if (!currentBlobUrl) return;
-      const a = document.createElement('a');
-      a.href = currentBlobUrl;
-      a.download = 'label.png';
-      a.click();
+      const a = document.createElement('a'); a.href = currentBlobUrl; a.download = 'label.png'; a.click();
     });
-
     document.getElementById('btnCopyZpl').addEventListener('click', () => {
-      navigator.clipboard.writeText(zplOutput.value).then(() => {
-        const btn = document.getElementById('btnCopyZpl');
-        btn.textContent = 'Copied!';
-        setTimeout(() => btn.textContent = 'Copy ZPL', 1500);
+      navigator.clipboard.writeText(document.getElementById('zplOutput').value).then(() => {
+        const b = document.getElementById('btnCopyZpl'); b.textContent = 'Copied!';
+        setTimeout(() => b.textContent = 'Copy ZPL', 1500);
       });
     });
 
-    function showError(msg) {
-      errorEl.textContent = msg;
-      errorEl.style.display = 'block';
-    }
-
-    // Tabs
-    document.getElementById('tabPreview').addEventListener('click', () => switchTab('preview'));
-    document.getElementById('tabZpl').addEventListener('click', () => switchTab('zpl'));
-
-    function switchTab(tab) {
-      const isPreview = tab === 'preview';
-      document.getElementById('tabPreview').classList.toggle('active', isPreview);
-      document.getElementById('tabZpl').classList.toggle('active', !isPreview);
-      document.getElementById('panelPreview').style.display = isPreview ? 'block' : 'none';
-      document.getElementById('panelZpl').style.display = isPreview ? 'none' : 'block';
-    }
-
-    // Printer
+    // ── Printer ───────────────────────────────────────────
     function updatePrintButton() {
       const ip = document.getElementById('printerSelect').value;
-      document.getElementById('btnPrint').disabled = !ip || !hasPreviewedOnce;
+      document.getElementById('btnPrint').disabled = !ip || !printState.hasPreviewedOnce;
     }
-
     document.getElementById('printerSelect').addEventListener('change', updatePrintButton);
-
     document.getElementById('btnPrint').addEventListener('click', () => {
       const btn = document.getElementById('btnPrint');
-      btn.textContent = 'กำลังส่ง...';
-      btn.disabled = true;
-
-      setTimeout(() => {
-        btn.textContent = 'Print';
-        btn.disabled = false;
-        showPrintSuccess();
-      }, 1500);
+      btn.textContent = 'กำลังส่ง...'; btn.disabled = true;
+      setTimeout(() => { btn.textContent = 'Print'; btn.disabled = false; showPrintSuccess(); }, 1500);
     });
-
     function showPrintSuccess() {
-      const overlay = document.getElementById('printOverlay');
-      overlay.classList.add('show');
-      setTimeout(() => overlay.classList.remove('show'), 2200);
+      const ov = document.getElementById('printOverlay');
+      ov.classList.add('show'); setTimeout(() => ov.classList.remove('show'), 2200);
     }
+
+    // ── Design: Field Checklist ───────────────────────────
+    const ALL_FIELD_KEYS = Object.keys(FIELD_LABELS);
+
+    function populateDesignFieldChecklist(selectedKeys) {
+      const container = document.getElementById('designFieldChecklist');
+      container.innerHTML = ALL_FIELD_KEYS.map(k => `
+        <div class="field-check-item">
+          <input type="checkbox" id="dfc_${cid(k)}" data-key="${escHtml(k)}" ${selectedKeys.includes(k) ? 'checked' : ''} />
+          <label class="fci-label" for="dfc_${cid(k)}">${FIELD_LABELS[k]}</label>
+        </div>`).join('');
+      container.querySelectorAll('input[type="checkbox"]').forEach(cb =>
+        cb.addEventListener('change', scheduleDesignPreview)
+      );
+    }
+
+    function getDesignCheckedKeys() {
+      return ALL_FIELD_KEYS.filter(k => document.getElementById('dfc_' + cid(k))?.checked);
+    }
+
+    function getCheckedKeysFromPrintList() {
+      return ALL_FIELD_KEYS.filter(k => document.getElementById('chk_' + cid(k))?.checked);
+    }
+
+    function buildZplTemplate(selectedKeys) {
+      const qrX = +document.getElementById('qrX').value;
+      const qrY = +document.getElementById('qrY').value;
+      const qrSize = +document.getElementById('qrSize').value;
+      const dataX = +document.getElementById('dataX').value;
+      const dataY = +document.getElementById('dataY').value;
+      const fs = +document.getElementById('fontSize').value;
+      const vo = +document.getElementById('valOffset').value;
+      const lh = Math.round(fs * 1.5);
+      let zpl = `^XA\n^CI28\n`;
+      zpl += `^FO${qrX},${qrY}^BQN,2,${qrSize}^FDLA,{BarcodeData}^FS\n`;
+      selectedKeys.forEach((k, i) => {
+        const y = dataY + i * lh;
+        const label = FIELD_LABELS[k] || k;
+        zpl += `^FO${dataX},${y}^A0N,${fs},${fs}^FD${label}:^FS\n`;
+        zpl += `^FO${dataX + vo},${y}^A0N,${fs},${fs}^FD{${k}}^FS\n`;
+      });
+      return zpl + `^XZ`;
+    }
+
+    // ── Design: Sliders ───────────────────────────────────
+    function bindSlider(id, valId) {
+      const s = document.getElementById(id), d = document.getElementById(valId);
+      s.addEventListener('input', () => { d.textContent = s.value; scheduleDesignPreview(); });
+    }
+    ['qrX:qrXVal','qrY:qrYVal','qrSize:qrSizeVal','dataX:dataXVal','dataY:dataYVal','fontSize:fontSizeVal','valOffset:valOffsetVal']
+      .forEach(p => { const [a,b] = p.split(':'); bindSlider(a,b); });
+    ['designDpi','designWidth','designHeight'].forEach(id =>
+      document.getElementById(id).addEventListener('change', scheduleDesignPreview)
+    );
+    function scheduleDesignPreview() {
+      document.getElementById('designRefreshBadge').classList.add('show');
+      clearTimeout(designTimer);
+      designTimer = setTimeout(async () => {
+        await doDesignPreview();
+        document.getElementById('designRefreshBadge').classList.remove('show');
+      }, 900);
+    }
+    async function doDesignPreview() {
+      const SAMPLE_DATA = { 'PLANT':'DFB2', 'VENDOR':'676742', 'P/N':'3475221400', 'QTY':500, 'D/C':'260501 Rev.04', 'W/O':'3622502555', 'LINE':'F05', 'createdAt':'20260513' };
+      const sampleQr = JSON.stringify({ ...SAMPLE_DATA, traceId:'TRC-20260513-ABCD1234' });
+      const checkedKeys = getDesignCheckedKeys();
+      const sampleFields = (checkedKeys.length ? checkedKeys : ALL_FIELD_KEYS)
+        .filter(k => SAMPLE_DATA[k] !== undefined)
+        .map(k => ({ label: FIELD_LABELS[k] || k, value: String(SAMPLE_DATA[k]) }));
+      const zpl = buildZpl({ qrContent: sampleQr, textFields: sampleFields });
+      const dpi = document.getElementById('designDpi').value;
+      const w = document.getElementById('designWidth').value;
+      const h = document.getElementById('designHeight').value;
+      const hint = document.getElementById('designPreviewHint');
+      const img = document.getElementById('designPreviewImg');
+      try {
+        const res = await fetch('/api/zpl/preview', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ zpl, dpi, width:w, height:h })
+        });
+        if (!res.ok) return;
+        const blob = await res.blob();
+        if (designBlobUrl) URL.revokeObjectURL(designBlobUrl);
+        designBlobUrl = URL.createObjectURL(blob);
+        img.src = designBlobUrl; img.style.display = 'block'; hint.style.display = 'none';
+      } catch { /* silent */ }
+    }
+
+    // ── Design: List ──────────────────────────────────────
+    async function loadLayouts() {
+      try { const r = await fetch('/api/layouts'); ds.layouts = await r.json(); }
+      catch { ds.layouts = []; }
+      renderLayoutList();
+    }
+    function renderLayoutList() {
+      const grid = document.getElementById('layoutCardGrid');
+      const empty = document.getElementById('layoutEmpty');
+      if (!ds.layouts.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+      empty.style.display = 'none';
+      grid.innerHTML = ds.layouts.map(l => `
+        <div class="lci" data-id="${l.id}">
+          <div class="lci-icon">📋</div>
+          <div class="lci-center">
+            <div class="lci-name">${escHtml(l.templateName)}</div>
+            <div class="lci-desc">${escHtml(l.description||'—')}</div>
+            <div class="lci-date">Updated: ${fmtDate(l.updatedAt)}</div>
+          </div>
+          <div class="lci-actions">
+            <button class="btn-edit-sm" data-action="edit" data-id="${l.id}">Edit</button>
+            <button class="btn-del-sm" data-action="delete" data-id="${l.id}">Delete</button>
+          </div>
+        </div>`).join('');
+    }
+    document.getElementById('layoutCardGrid').addEventListener('click', async e => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const id = +btn.dataset.id;
+      if (btn.dataset.action === 'edit') { const l = ds.layouts.find(x=>x.id===id); if(l) openEditMode(l,false); }
+      else if (btn.dataset.action === 'delete') { if(confirm('ลบ Layout นี้?')) await deleteLayout(id); }
+    });
+    document.getElementById('btnNewLayout').addEventListener('click', () => openCreateMode(false));
+
+    // ── Design: Edit ──────────────────────────────────────
+    function openCreateMode(fromPrint) {
+      ds.editId=null; ds.fromPrint=fromPrint;
+      document.getElementById('editTitle').textContent = 'New Layout';
+      document.getElementById('editName').value = '';
+      document.getElementById('editDesc').value = '';
+      document.getElementById('btnBackEdit').textContent = fromPrint ? '← Back to Print' : '← Layouts';
+      document.getElementById('btnApplyToPrint').style.display = fromPrint ? 'inline-flex' : 'none';
+      document.getElementById('designEdit').style.display = 'block';
+      document.getElementById('designList').style.display = 'none';
+      document.getElementById('designPreviewImg').style.display = 'none';
+      document.getElementById('designPreviewHint').style.display = 'block';
+      const initFields = ds.pendingFields ?? ALL_FIELD_KEYS;
+      populateDesignFieldChecklist(initFields);
+      ds.pendingFields = null;
+      setPageTab('design'); ds.mode = 'edit';
+    }
+    function openEditMode(layout, fromPrint) {
+      ds.editId=layout.id; ds.fromPrint=fromPrint;
+      document.getElementById('editTitle').textContent = `Edit: ${layout.templateName}`;
+      document.getElementById('editName').value = layout.templateName;
+      document.getElementById('editDesc').value = layout.description||'';
+      document.getElementById('btnBackEdit').textContent = fromPrint ? '← Back to Print' : '← Layouts';
+      document.getElementById('btnApplyToPrint').style.display = fromPrint ? 'inline-flex' : 'none';
+      applyLayoutToSliders(layout);
+      // Field checklist: priority → pendingFields (from print) → stored template → all
+      let initFields;
+      if (ds.pendingFields) {
+        initFields = ds.pendingFields;
+      } else if (layout.labelFieldsJson) {
+        try { initFields = JSON.parse(layout.labelFieldsJson); } catch { initFields = ALL_FIELD_KEYS; }
+      } else { initFields = ALL_FIELD_KEYS; }
+      populateDesignFieldChecklist(initFields);
+      ds.pendingFields = null;
+      document.getElementById('designEdit').style.display = 'block';
+      document.getElementById('designList').style.display = 'none';
+      document.getElementById('designPreviewImg').style.display = 'none';
+      document.getElementById('designPreviewHint').style.display = 'block';
+      setPageTab('design'); ds.mode = 'edit';
+      scheduleDesignPreview();
+    }
+    document.getElementById('btnBackEdit').addEventListener('click', () => {
+      if (ds.fromPrint) { ds.fromPrint=false; setPageTab('print'); }
+      else showListMode();
+    });
+    document.getElementById('btnApplyToPrint').addEventListener('click', () => {
+      ds.fromPrint=false; setPageTab('print');
+    });
+    function showListMode() {
+      ds.mode='list'; ds.editId=null;
+      document.getElementById('designEdit').style.display='none';
+      document.getElementById('designList').style.display='block';
+      loadLayouts();
+    }
+
+    // ── Design: Save / Delete ─────────────────────────────
+    document.getElementById('btnSaveLayout').addEventListener('click', saveLayout);
+    async function saveLayout() {
+      const name = document.getElementById('editName').value.trim();
+      if (!name) { alert('กรุณาใส่ Template Name'); return; }
+      const selectedKeys = getDesignCheckedKeys();
+      const body = {
+        templateName: name, description: document.getElementById('editDesc').value.trim(),
+        qrX:+document.getElementById('qrX').value, qrY:+document.getElementById('qrY').value,
+        qrSize:+document.getElementById('qrSize').value, dataX:+document.getElementById('dataX').value,
+        dataY:+document.getElementById('dataY').value, fontSize:+document.getElementById('fontSize').value,
+        valOffset:+document.getElementById('valOffset').value,
+        zplTemplate: buildZplTemplate(selectedKeys),
+        labelFields: selectedKeys,
+      };
+      const btn = document.getElementById('btnSaveLayout');
+      btn.textContent='Saving...'; btn.disabled=true;
+      try {
+        const url = ds.editId ? `/api/layouts/${ds.editId}` : '/api/layouts';
+        const res = await fetch(url, { method: ds.editId?'PUT':'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+        if (!res.ok) throw new Error();
+        const saved = await res.json();
+        if (!ds.editId) ds.layouts.unshift(saved);
+        else { const i = ds.layouts.findIndex(l=>l.id===ds.editId); if(i>=0) ds.layouts[i]=saved; }
+        ds.editId = saved.id;
+        document.getElementById('editTitle').textContent = `Edit: ${saved.templateName}`;
+        btn.textContent='✓ Saved!';
+        setTimeout(() => { btn.textContent='Save Layout'; btn.disabled=false; }, 1500);
+        if (document.getElementById('stepForm').style.display !== 'none') loadLayoutDropdown();
+      } catch { alert('บันทึกไม่สำเร็จ'); btn.textContent='Save Layout'; btn.disabled=false; }
+    }
+    async function deleteLayout(id) {
+      try {
+        await fetch(`/api/layouts/${id}`, { method:'DELETE' });
+        ds.layouts = ds.layouts.filter(l=>l.id!==id);
+        renderLayoutList();
+        if (document.getElementById('stepForm').style.display !== 'none') loadLayoutDropdown();
+      } catch { alert('ลบไม่สำเร็จ'); }
+    }
+
+    // ── Helpers ───────────────────────────────────────────
+    function applyLayoutToSliders(l) {
+      [['qrX',l.qrX,'qrXVal'],['qrY',l.qrY,'qrYVal'],['qrSize',l.qrSize,'qrSizeVal'],
+       ['dataX',l.dataX,'dataXVal'],['dataY',l.dataY,'dataYVal'],['fontSize',l.fontSize,'fontSizeVal'],
+       ['valOffset',l.valOffset??120,'valOffsetVal']]
+        .forEach(([id,val,dispId]) => {
+          document.getElementById(id).value = val;
+          document.getElementById(dispId).textContent = val;
+        });
+    }
+    function showError(msg) { const e=document.getElementById('error'); e.textContent=msg; e.style.display='block'; }
+    function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function fmtDate(iso) { const d=new Date(iso); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
   </script>
 </body>
 </html>
