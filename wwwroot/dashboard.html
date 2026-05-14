@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f5f5f5; }
+    nav { background: #1565c0; display: flex; gap: 4px; padding: 0 16px; flex-wrap: wrap; }
+    nav a { color: #fff; text-decoration: none; padding: 14px 20px; font-size: 0.95rem; opacity: 0.75; display: block; }
+    nav a:hover { opacity: 1; background: rgba(255,255,255,0.1); }
+    nav a.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: 600; }
+
+    .page-header { background: linear-gradient(135deg, #1a237e 0%, #0288d1 100%); padding: 20px 24px; color: #fff; display: flex; align-items: center; gap: 12px; }
+    .page-header h2 { font-size: 1.3rem; margin-bottom: 2px; }
+    .page-header p { font-size: 0.82rem; opacity: 0.75; }
+
+    .content { padding: 20px 24px; }
+
+    /* Stats */
+    .stats-row { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
+    .stat-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px 22px; min-width: 120px; }
+    .stat-num { font-size: 2rem; font-weight: 700; color: #1565c0; line-height: 1; margin-bottom: 4px; }
+    .stat-label { font-size: 0.78rem; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* Map */
+    #map { height: 420px; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 20px; background: #e8eaf6; }
+    .map-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 420px; background: #fff; border-radius: 12px; border: 1px solid #e0e0e0; color: #bbb; margin-bottom: 20px; font-size: 0.95rem; gap: 8px; }
+
+    /* Table */
+    .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .table-header h3 { font-size: 1rem; color: #333; }
+    .btn-refresh { padding: 7px 14px; background: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; font-size: 0.82rem; cursor: pointer; color: #1565c0; }
+    .btn-refresh:hover { background: #bbdefb; }
+    .log-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e0e0e0; font-size: 0.85rem; }
+    .log-table th { background: #1565c0; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .log-table td { padding: 10px 14px; border-bottom: 1px solid #f0f0f0; color: #333; }
+    .log-table tr:last-child td { border-bottom: none; }
+    .log-table tr:hover td { background: #f5f9ff; }
+    .action-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; background: #e8f5e9; color: #2e7d32; }
+    .coord-small { font-family: monospace; font-size: 0.78rem; color: #777; }
+    .empty-row td { text-align: center; color: #bbb; padding: 32px; }
+    .log-table tbody tr.row-selected td { background: #fff8e1 !important; }
+    .log-table input[type="checkbox"] { width:16px; height:16px; accent-color:#1976d2; cursor:pointer; }
+    .badge-gps  { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; background:#e8f5e9; color:#2e7d32; }
+    .badge-wifi { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; background:#e3f2fd; color:#1565c0; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="/">ZPL Label Preview</a>
+    <a href="/generate-qr.html">Generate New QR</a>
+    <a href="/receive.html">Receive</a>
+    <a href="/move.html">Move</a>
+    <a href="/dashboard.html" class="active">Dashboard</a>
+    <a href="/location.html">Location</a>
+  </nav>
+
+  <div class="page-header">
+    <div style="font-size:2rem; background:rgba(255,255,255,0.15); border-radius:10px; width:48px; height:48px; display:flex; align-items:center; justify-content:center; flex-shrink:0">📊</div>
+    <div>
+      <h2>Location Dashboard</h2>
+      <p>แผนที่แสดงตำแหน่ง user ที่ทำรายการ</p>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="statTotal">—</div><div class="stat-label">Total Logs</div></div>
+      <div class="stat-card"><div class="stat-num" id="statToday">—</div><div class="stat-label">Today</div></div>
+      <div class="stat-card"><div class="stat-num" id="statActions">—</div><div class="stat-label">Actions</div></div>
+    </div>
+
+    <div id="mapContainer">
+      <div id="map"></div>
+    </div>
+
+    <div class="table-header">
+      <h3>Location Logs</h3>
+      <button class="btn-refresh" id="btnRefresh">↻ Refresh</button>
+    </div>
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="chkAll" title="Select All" /></th>
+          <th>#</th>
+          <th>Timestamp</th>
+          <th>Action</th>
+          <th>Type</th>
+          <th>Coordinates</th>
+          <th>Accuracy</th>
+        </tr>
+      </thead>
+      <tbody id="logTableBody">
+        <tr class="empty-row"><td colspan="5">กำลังโหลด...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    let map = null;
+    let markerMap = new Map(); // logId → Leaflet marker
+    let selectedId = null;
+
+    async function loadLogs() {
+      try {
+        const res = await fetch('/api/locationlogs');
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        const logs = await res.json();
+        renderStats(logs);
+        renderMap(logs);
+        renderTable(logs);
+      } catch (e) {
+        document.getElementById('statTotal').textContent = '!';
+        document.getElementById('logTableBody').innerHTML =
+          `<tr class="empty-row"><td colspan="5" style="color:#c62828">❌ โหลดข้อมูลไม่ได้: ${e.message}<br><small>ลอง restart app แล้วเปิดหน้านี้ใหม่</small></td></tr>`;
+        document.getElementById('mapContainer').innerHTML =
+          `<div class="map-empty"><span style="font-size:2rem">⚠️</span><span>${e.message}</span></div>`;
+      }
+    }
+
+    function renderStats(logs) {
+      const today = new Date().toDateString();
+      const todayCount = logs.filter(l => new Date(l.timestamp).toDateString() === today).length;
+      const actions = new Set(logs.map(l => l.action)).size;
+      document.getElementById('statTotal').textContent = logs.length;
+      document.getElementById('statToday').textContent = todayCount;
+      document.getElementById('statActions').textContent = actions;
+    }
+
+    function renderMap(logs) {
+      const container = document.getElementById('mapContainer');
+      if (typeof L === 'undefined') {
+        container.innerHTML = `<div class="map-empty"><span style="font-size:2rem">🗺️</span><span>Map ไม่ได้โหลด (อาจบล็อก CDN)</span><span style="font-size:0.8rem">ตรวจสอบ internet connection</span></div>`;
+        return;
+      }
+      if (logs.length === 0) {
+        container.innerHTML = `
+          <div class="map-empty">
+            <span style="font-size:2.5rem">🗺️</span>
+            <span>ยังไม่มีข้อมูล Location Log</span>
+            <span style="font-size:0.8rem">กด "Get My Location" ที่หน้า Receive เพื่อเพิ่มข้อมูล</span>
+          </div>`;
+        return;
+      }
+
+      container.innerHTML = '<div id="map"></div>';
+
+      if (!map) {
+        map = L.map('map');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+          maxZoom: 19
+        }).addTo(map);
+      } else {
+        markerMap.forEach(m => m.remove());
+        markerMap.clear();
+        selectedId = null;
+      }
+
+      const bounds = [];
+      logs.forEach(log => {
+        const lat = log.latitude, lng = log.longitude;
+        bounds.push([lat, lng]);
+
+        const marker = L.circleMarker([lat, lng], {
+          radius: 10, fillColor: '#1976d2', color: '#fff',
+          weight: 2, opacity: 1, fillOpacity: 0.85
+        }).addTo(map);
+
+        const methodLabel = log.method === 'gps' ? '🛰️ GPS' : log.method === 'wifi' ? '📶 WiFi' : '—';
+        const time = new Date(log.timestamp).toLocaleString('th-TH');
+        marker.bindPopup(`
+          <b style="text-transform:uppercase">${log.action}</b> <small>${methodLabel}</small><br/>
+          <small>${time}</small><br/>
+          <code style="font-size:0.78rem">${lat.toFixed(6)}, ${lng.toFixed(6)}</code><br/>
+          <small>Accuracy: ±${Math.round(log.accuracy)} m</small>
+        `);
+        marker.on('click', () => selectLog(log.id));
+        markerMap.set(log.id, marker);
+      });
+
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 17 });
+    }
+
+    function renderTable(logs) {
+      const tbody = document.getElementById('logTableBody');
+      if (logs.length === 0) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="7">ยังไม่มีข้อมูล</td></tr>';
+        return;
+      }
+      tbody.innerHTML = logs.map(l => {
+        const badge = l.method === 'gps'
+          ? '<span class="badge-gps">🛰️ GPS</span>'
+          : l.method === 'wifi'
+            ? '<span class="badge-wifi">📶 WiFi</span>'
+            : '<span style="color:#bbb">—</span>';
+        return `<tr data-id="${l.id}" onclick="selectLog(${l.id})">
+          <td onclick="event.stopPropagation()"><input type="checkbox" class="row-chk" data-id="${l.id}" onchange="updateMapFromSelection()" /></td>
+          <td>${l.id}</td>
+          <td>${new Date(l.timestamp).toLocaleString('th-TH')}</td>
+          <td><span class="action-badge">${l.action}</span></td>
+          <td>${badge}</td>
+          <td><span class="coord-small">${l.latitude.toFixed(6)}, ${l.longitude.toFixed(6)}</span></td>
+          <td>±${Math.round(l.accuracy)} m</td>
+        </tr>`;
+      }).join('');
+
+      // Select All checkbox
+      document.getElementById('chkAll').onchange = function() {
+        document.querySelectorAll('.row-chk').forEach(cb => cb.checked = this.checked);
+        updateMapFromSelection();
+      };
+    }
+
+    function updateMapFromSelection() {
+      if (!map) return;
+      const checked = new Set([...document.querySelectorAll('.row-chk:checked')].map(cb => +cb.dataset.id));
+      const showAll = checked.size === 0;
+
+      const visibleLatLngs = [];
+      markerMap.forEach((marker, logId) => {
+        const visible = showAll || checked.has(logId);
+        marker.setStyle(visible
+          ? { radius: 10, fillColor: '#1976d2', color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.85 }
+          : { radius: 0, opacity: 0, fillOpacity: 0 });
+        if (visible) visibleLatLngs.push(marker.getLatLng());
+      });
+
+      if (!showAll && visibleLatLngs.length > 0)
+        map.fitBounds(visibleLatLngs, { padding: [40, 40], maxZoom: 17 });
+
+      // sync select-all checkbox state
+      const total = document.querySelectorAll('.row-chk').length;
+      const chkAll = document.getElementById('chkAll');
+      if (chkAll) { chkAll.checked = checked.size === total && total > 0; chkAll.indeterminate = checked.size > 0 && checked.size < total; }
+    }
+
+    function selectLog(id) {
+      // Toggle selection
+      selectedId = (selectedId === id) ? null : id;
+
+      // Highlight table rows
+      document.querySelectorAll('#logTableBody tr').forEach(tr => {
+        tr.classList.toggle('row-selected', +tr.dataset.id === selectedId);
+      });
+
+      // Highlight markers
+      markerMap.forEach((marker, logId) => {
+        if (selectedId === null) {
+          marker.setStyle({ fillColor: '#1976d2', radius: 10, opacity: 1, fillOpacity: 0.85 });
+        } else if (logId === selectedId) {
+          marker.setStyle({ fillColor: '#f57f17', radius: 16, opacity: 1, fillOpacity: 1 });
+          marker.openPopup();
+          map.panTo(marker.getLatLng());
+        } else {
+          marker.setStyle({ fillColor: '#9e9e9e', radius: 8, opacity: 0.5, fillOpacity: 0.4 });
+        }
+      });
+    }
+
+    document.getElementById('btnRefresh').addEventListener('click', loadLogs);
+    loadLogs();
+  </script>
+</body>
+</html>

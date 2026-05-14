@@ -7,16 +7,85 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: sans-serif; background: #f5f5f5; }
+
     nav { background: #1565c0; display: flex; gap: 4px; padding: 0 16px; flex-wrap: wrap; }
-    nav a {
-      color: #fff; text-decoration: none; padding: 14px 20px;
-      font-size: 0.95rem; opacity: 0.75; display: block;
-    }
+    nav a { color: #fff; text-decoration: none; padding: 14px 20px; font-size: 0.95rem; opacity: 0.75; display: block; }
     nav a:hover { opacity: 1; background: rgba(255,255,255,0.1); }
     nav a.active { opacity: 1; border-bottom: 3px solid #fff; font-weight: 600; }
-    .content { padding: 24px; }
-    h1 { font-size: 1.4rem; color: #333; margin-bottom: 8px; }
-    p { color: #999; font-size: 0.9rem; }
+
+    .content { padding: 24px; max-width: 560px; }
+    h1 { font-size: 1.4rem; color: #333; margin-bottom: 6px; }
+    .subtitle { font-size: 0.88rem; color: #999; margin-bottom: 24px; }
+
+    .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+    .card-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #999; margin-bottom: 14px; }
+
+    .scan-btn {
+      width: 100%; padding: 18px; border: 2px dashed #90caf9; border-radius: 10px;
+      background: #f5f9ff; cursor: pointer; touch-action: manipulation;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      font-size: 1rem; color: #1976d2; font-weight: 600;
+    }
+    .scan-btn:hover { background: #e3f2fd; border-color: #1976d2; }
+
+    .part-badge { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+    .part-icon { font-size: 1.6rem; }
+    .part-info { flex: 1; }
+    .part-code { font-weight: 700; font-family: monospace; font-size: 1rem; color: #1b5e20; }
+    .part-desc { font-size: 0.82rem; color: #555; margin-top: 2px; }
+    .btn-rescan { padding: 6px 12px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 0.8rem; cursor: pointer; color: #666; }
+
+    label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 6px; font-weight: 600; }
+    select { width: 100%; padding: 11px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; background: #fff; }
+    select:focus { outline: none; border-color: #1976d2; box-shadow: 0 0 0 2px rgba(25,118,210,0.15); }
+
+    .loc-info { margin-top: 10px; padding: 10px 12px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; font-size: 0.82rem; color: #666; display: none; }
+    .loc-info.no-gps { background: #fff8e1; border-color: #ffe082; color: #f57f17; }
+
+    .btn-move {
+      width: 100%; padding: 14px; background: #1976d2; color: #fff;
+      border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700;
+      cursor: pointer; touch-action: manipulation;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .btn-move:hover:not(:disabled) { background: #1565c0; }
+    .btn-move:disabled { background: #90caf9; cursor: default; }
+
+    .result-card { border-radius: 12px; padding: 24px; text-align: center; display: none; margin-bottom: 16px; }
+    .result-card.success { background: #e8f5e9; border: 2px solid #4caf50; }
+    .result-card.error   { background: #fff3e0; border: 2px solid #ff9800; }
+    .result-icon  { font-size: 3rem; margin-bottom: 10px; }
+    .result-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .result-card.success .result-title { color: #2e7d32; }
+    .result-card.error   .result-title { color: #e65100; }
+    .result-detail { font-size: 0.88rem; color: #555; line-height: 1.7; }
+
+    .dist-bar-wrap { margin: 14px 0 6px; }
+    .dist-bar-bg { height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; }
+    .dist-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+    .dist-bar-fill.ok   { background: #4caf50; }
+    .dist-bar-fill.warn { background: #ff9800; }
+    .dist-labels { display: flex; justify-content: space-between; font-size: 0.72rem; color: #aaa; margin-top: 3px; }
+
+    .btn-retry { margin-top: 14px; padding: 10px 24px; background: #fff; border: 1.5px solid #1976d2; border-radius: 8px; font-size: 0.95rem; color: #1976d2; cursor: pointer; font-weight: 600; }
+    .btn-retry:hover { background: #e3f2fd; }
+
+    .scan-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+      z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    .scan-overlay.show { display: flex; }
+    .scan-frame { width: 260px; height: 260px; border: 3px solid #fff; border-radius: 12px; position: relative; overflow: hidden; background: #111; }
+    .corner { position: absolute; width: 24px; height: 24px; border-color: #4fc3f7; border-style: solid; }
+    .corner.tl { top:-2px; left:-2px;  border-width:3px 0 0 3px; }
+    .corner.tr { top:-2px; right:-2px; border-width:3px 3px 0 0; }
+    .corner.bl { bottom:-2px; left:-2px;  border-width:0 0 3px 3px; }
+    .corner.br { bottom:-2px; right:-2px; border-width:0 3px 3px 0; }
+    .laser { position: absolute; left:0; right:0; height:2px; background:#f44336; animation: laserMove 1.5s ease-in-out infinite; }
+    @keyframes laserMove { 0%{top:10px} 50%{top:240px} 100%{top:10px} }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .scan-hint { color: #fff; font-size: 0.95rem; opacity: 0.8; }
+    .btn-cancel { padding:10px 28px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.4); border-radius:8px; color:#fff; font-size:0.95rem; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -25,10 +94,248 @@
     <a href="/generate-qr.html">Generate New QR</a>
     <a href="/receive.html">Receive</a>
     <a href="/move.html" class="active">Move</a>
+    <a href="/dashboard.html">Dashboard</a>
+    <a href="/location.html">Location</a>
   </nav>
+
   <div class="content">
     <h1>Move</h1>
-    <p>เดี๋ยวเพิ่ม content ทีหลัง</p>
+    <p class="subtitle">สแกน Part แล้วเลือก Location ที่จะย้ายไป</p>
+
+    <!-- Step 1 -->
+    <div class="card">
+      <div class="card-title">Step 1 — Scan Part</div>
+      <button class="scan-btn" id="btnScan">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
+        Scan QR / Barcode
+      </button>
+      <div id="partBadge" style="display:none; margin-top:12px">
+        <div class="part-badge">
+          <div class="part-icon">📦</div>
+          <div class="part-info">
+            <div class="part-code" id="partCode">—</div>
+            <div class="part-desc" id="partDesc">—</div>
+          </div>
+          <button class="btn-rescan" id="btnRescan">Re-scan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="card" id="stepLocation" style="opacity:0.4; pointer-events:none">
+      <div class="card-title">Step 2 — Select Destination</div>
+      <label for="locationSelect">Location</label>
+      <select id="locationSelect">
+        <option value="">— เลือก Location —</option>
+      </select>
+      <div class="loc-info" id="locInfo"></div>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="resultCard">
+      <div class="result-icon"  id="resultIcon"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <div class="result-detail" id="resultDetail"></div>
+      <div class="dist-bar-wrap" id="distBarWrap" style="display:none">
+        <div class="dist-bar-bg"><div class="dist-bar-fill" id="distBarFill" style="width:0%"></div></div>
+        <div class="dist-labels"><span>0 m</span><span id="distBarMax"></span></div>
+      </div>
+      <button class="btn-retry" id="btnRetry" style="display:none" onclick="doMove()">↩ Try Again</button>
+    </div>
+
+    <!-- Move button -->
+    <button class="btn-move" id="btnMove" disabled>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      Move
+    </button>
   </div>
+
+  <!-- Scan overlay (mock) -->
+  <div class="scan-overlay" id="scanOverlay">
+    <div class="scan-frame">
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+      <div class="laser"></div>
+    </div>
+    <div class="scan-hint">กำลังสแกน...</div>
+    <button class="btn-cancel" id="btnCancelScan">Cancel</button>
+  </div>
+
+  <script>
+    const THRESHOLD_M = 10; // threshold 10 เมตร
+
+    const MOCK_PARTS = [
+      { code: '3486842400M', desc: 'Power Supply Unit · QTY: 144' },
+      { code: '3475221400',  desc: 'Control Board · QTY: 50' },
+      { code: '3822566900',  desc: 'Connector Set · QTY: 200' },
+    ];
+
+    let scannedPart = null;
+    let locations   = [];
+
+    // Load locations from master data
+    async function loadLocations() {
+      try {
+        const res = await fetch('/api/locations');
+        locations = (await res.json()).filter(l => l.status === 'Active');
+        const sel = document.getElementById('locationSelect');
+        sel.innerHTML = '<option value="">— เลือก Location —</option>';
+        locations.forEach(l => {
+          const opt = document.createElement('option');
+          opt.value = l.id;
+          opt.textContent = `${l.code}${l.description ? ' — ' + l.description : ''}`;
+          sel.appendChild(opt);
+        });
+      } catch { /* silent */ }
+    }
+
+    document.getElementById('locationSelect').addEventListener('change', function() {
+      const loc = locations.find(l => l.id === +this.value);
+      const info = document.getElementById('locInfo');
+      if (!loc) { info.style.display = 'none'; updateMoveBtn(); return; }
+      if (loc.latitude != null && loc.longitude != null) {
+        info.className = 'loc-info';
+        info.innerHTML = `📍 ${loc.type || '—'} &nbsp;|&nbsp; ${loc.latitude.toFixed(5)}, ${loc.longitude.toFixed(5)}`;
+      } else {
+        info.className = 'loc-info no-gps';
+        info.innerHTML = `⚠️ ยังไม่มีข้อมูล GPS — จะข้ามการตรวจสอบตำแหน่ง`;
+      }
+      info.style.display = 'block';
+      hideResult();
+      updateMoveBtn();
+    });
+
+    // Mock scan
+    document.getElementById('btnScan').addEventListener('click', startScan);
+    document.getElementById('btnCancelScan').addEventListener('click', () =>
+      document.getElementById('scanOverlay').classList.remove('show')
+    );
+    document.getElementById('btnRescan').addEventListener('click', () => {
+      scannedPart = null;
+      document.getElementById('partBadge').style.display = 'none';
+      document.getElementById('btnScan').style.display = 'flex';
+      document.getElementById('stepLocation').style.opacity = '0.4';
+      document.getElementById('stepLocation').style.pointerEvents = 'none';
+      hideResult(); updateMoveBtn();
+    });
+
+    function startScan() {
+      document.getElementById('scanOverlay').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('scanOverlay').classList.remove('show');
+        scannedPart = MOCK_PARTS[Math.floor(Math.random() * MOCK_PARTS.length)];
+        document.getElementById('partCode').textContent = scannedPart.code;
+        document.getElementById('partDesc').textContent = scannedPart.desc;
+        document.getElementById('partBadge').style.display = 'block';
+        document.getElementById('btnScan').style.display = 'none';
+        document.getElementById('stepLocation').style.opacity = '1';
+        document.getElementById('stepLocation').style.pointerEvents = 'auto';
+        hideResult(); updateMoveBtn();
+      }, 2000);
+    }
+
+    function updateMoveBtn() {
+      document.getElementById('btnMove').disabled =
+        !scannedPart || !document.getElementById('locationSelect').value;
+    }
+
+    // Move + GPS validation
+    document.getElementById('btnMove').addEventListener('click', doMove);
+
+    function doMove() {
+      const locId = +document.getElementById('locationSelect').value;
+      const loc   = locations.find(l => l.id === locId);
+      if (!loc || !scannedPart) return;
+
+      hideResult();
+      const btn = document.getElementById('btnMove');
+      btn.disabled = true;
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="30 40"/></svg> กำลังรับตำแหน่ง...`;
+
+      // No GPS stored → skip validation
+      if (loc.latitude == null || loc.longitude == null) {
+        showResult('success', '✅', 'Move Success!',
+          `Part: <b>${scannedPart.code}</b> → <b>${loc.code}</b><br><small style="color:#999">ข้ามการตรวจสอบ GPS (ยังไม่มีพิกัด)</small>`);
+        btn.disabled = false; restoreBtn(); return;
+      }
+
+      if (!navigator.geolocation) {
+        showResult('error', '❌', 'ไม่รองรับ GPS', 'Browser นี้ไม่รองรับ Geolocation');
+        btn.disabled = false; restoreBtn(); return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const { latitude, longitude } = pos.coords;
+          const dist  = haversine(latitude, longitude, loc.latitude, loc.longitude);
+          const valid = dist <= THRESHOLD_M;
+
+          if (valid) {
+            showResult('success', '✅', 'Move Success!',
+              `Part: <b>${scannedPart.code}</b> → <b>${loc.code}</b><br>
+               ระยะห่าง: <b>${Math.round(dist)} m</b> (ภายใน ${THRESHOLD_M} m ✓)`);
+            showDistBar(dist, true);
+          } else {
+            showResult('error', '⚠️',
+              `Please Move Closer to ${loc.code}`,
+              `คุณอยู่ห่างจาก <b>${loc.code}</b> ประมาณ <b>${Math.round(dist)} m</b><br>
+               กรุณาเดินไปที่ Location แล้วกด Try Again<br>
+               <small style="color:#aaa">(threshold: ${THRESHOLD_M} m)</small>`);
+            showDistBar(dist, false);
+            document.getElementById('btnRetry').style.display = 'inline-block';
+          }
+          btn.disabled = !valid; restoreBtn();
+        },
+        err => {
+          const msgs = {1:'Permission ถูกปฏิเสธ', 2:'หาตำแหน่งไม่ได้', 3:'GPS Timeout — ลองอีกครั้ง'};
+          showResult('error', '❌', 'ไม่สามารถรับตำแหน่งได้', msgs[err.code] || err.message);
+          btn.disabled = false; restoreBtn();
+        },
+        { enableHighAccuracy: true, timeout: 60000, maximumAge: 0 }
+      );
+    }
+
+    function showResult(type, icon, title, detail) {
+      const card = document.getElementById('resultCard');
+      card.className = `result-card ${type}`;
+      document.getElementById('resultIcon').textContent  = icon;
+      document.getElementById('resultTitle').textContent = title;
+      document.getElementById('resultDetail').innerHTML  = detail;
+      card.style.display = 'block';
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showDistBar(dist, ok) {
+      const max = Math.max(dist * 1.5, THRESHOLD_M * 3);
+      const pct = Math.min((dist / max) * 100, 100);
+      document.getElementById('distBarWrap').style.display = 'block';
+      document.getElementById('distBarFill').className = `dist-bar-fill ${ok ? 'ok' : 'warn'}`;
+      document.getElementById('distBarFill').style.width = pct + '%';
+      document.getElementById('distBarMax').textContent  = Math.round(max) + ' m';
+    }
+
+    function hideResult() {
+      document.getElementById('resultCard').style.display = 'none';
+      document.getElementById('btnRetry').style.display = 'none';
+      document.getElementById('distBarWrap').style.display = 'none';
+    }
+
+    function restoreBtn() {
+      document.getElementById('btnMove').innerHTML =
+        `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Move`;
+    }
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 6371000;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    loadLocations();
+  </script>
 </body>
 </html>

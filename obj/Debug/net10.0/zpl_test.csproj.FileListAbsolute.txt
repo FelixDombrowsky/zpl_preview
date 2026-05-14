@@ -63,7 +63,9 @@ D:\Faye\projects\zpl_test\bin\Debug\net10.0\runtimes\win-arm\native\e_sqlite3.dl
 D:\Faye\projects\zpl_test\bin\Debug\net10.0\runtimes\win-arm64\native\e_sqlite3.dll
 D:\Faye\projects\zpl_test\bin\Debug\net10.0\runtimes\win-x64\native\e_sqlite3.dll
 D:\Faye\projects\zpl_test\bin\Debug\net10.0\runtimes\win-x86\native\e_sqlite3.dll
-D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\p0p2mdzf7z-{0}-bt1xzr13c0-bt1xzr13c0.gz
-D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\s5fdm34gyv-{0}-llm45sfa3g-llm45sfa3g.gz
-D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\wt4dqvhxnj-{0}-vs7vwyqw8r-vs7vwyqw8r.gz
-D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\hw4fnsp3i6-{0}-twsn9w7e5k-twsn9w7e5k.gz
+D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\hw4fnsp3i6-{0}-6epva7emfc-6epva7emfc.gz
+D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\p0p2mdzf7z-{0}-4z1tqmku5u-4z1tqmku5u.gz
+D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\g3anks91o1-{0}-eaf3xrfolm-eaf3xrfolm.gz
+D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\s5fdm34gyv-{0}-5s0cfuwdsu-5s0cfuwdsu.gz
+D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\wt4dqvhxnj-{0}-meervhv8o3-meervhv8o3.gz
+D:\Faye\projects\zpl_test\obj\Debug\net10.0\compressed\a7j878ovfd-{0}-0edvpyy423-0edvpyy423.gz
