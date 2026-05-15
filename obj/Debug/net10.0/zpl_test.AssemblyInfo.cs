@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("zpl_test")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fee1e5d15263a258e4bae0375a7b5b0efb4565cd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8616d800ab3aa3145f19148406d456b8946027d9")]
 [assembly: System.Reflection.AssemblyProductAttribute("zpl_test")]
 [assembly: System.Reflection.AssemblyTitleAttribute("zpl_test")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

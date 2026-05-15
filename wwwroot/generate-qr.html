@@ -23,7 +23,7 @@
     .page-tab:hover { color: #555; }
     .page-tab.active { border-color: #1a237e; color: #1a237e; font-weight: 600; }
 
-    .content { padding: 20px 24px; max-width: 760px; }
+    .content { padding: 20px 24px; max-width: 920px; }
 
     /* Steps */
     .steps { display: flex; align-items: center; margin-bottom: 24px; }
@@ -77,8 +77,23 @@
     .field-check-item:hover { background: #f0f4ff; }
     .field-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1976d2; cursor: pointer; flex-shrink: 0; }
     .field-check-item .fci-label { font-size: 0.88rem; color: #333; flex: 1; cursor: pointer; }
-    .field-check-item .fci-value { font-size: 0.72rem; color: #aaa; font-family: monospace; max-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fci-input { flex: 0 1 120px; min-width: 0; border: 1px solid transparent; border-radius: 5px; background: transparent; font-size: 0.78rem; font-family: monospace; color: #888; text-align: right; padding: 3px 6px; outline: none; transition: background 0.15s, border-color 0.15s; }
+    .fci-input:hover { background: #f0f0f0; border-color: #e0e0e0; }
+    .fci-input:focus { background: #e8f0fe; border-color: #90caf9; color: #1a237e; text-align: left; }
     .field-check-empty { font-size: 0.85rem; color: #bbb; text-align: center; padding: 20px 0; }
+
+    /* JSON Scan Section */
+    .json-scan-section { width: 100%; margin-top: 20px; padding-top: 16px; border-top: 1px solid #eee; }
+    .json-scan-or { font-size: 0.78rem; color: #bbb; text-align: center; margin-bottom: 10px; letter-spacing: 0.05em; }
+    #jsonScanInput { width: 100%; height: 110px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: monospace; font-size: 0.8rem; resize: vertical; background: #fafafa; line-height: 1.5; margin-bottom: 8px; }
+    #jsonScanInput:focus { outline: none; border-color: #1976d2; background: #fff; }
+    #jsonScanError { color: #c62828; font-size: 0.8rem; margin-bottom: 8px; display: none; }
+
+    /* Print Split Layout */
+    .print-split { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 16px; align-items: start; }
+    @media (max-width: 620px) { .print-split { grid-template-columns: 1fr; } }
+    .preview-placeholder-card { background: #fff; border: 2px dashed #e0e0e0; border-radius: 10px; padding: 52px 20px; text-align: center; color: #bbb; }
+    .preview-placeholder-card p { font-size: 0.88rem; margin-top: 10px; }
 
     /* Buttons */
     .btn-row { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -157,6 +172,48 @@
     .design-fields-header { padding: 9px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; background: #f3e5f5; color: #6a1b9a; }
     .design-fields-body { padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; }
 
+    /* Field Editor Split */
+    .field-editor-split { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+    @media (max-width: 600px) { .field-editor-split { grid-template-columns: 1fr; } }
+    .fep { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
+    .fep-header { padding: 9px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .fep-qr { background: #e8eaf6; color: #3949ab; }
+    .fep-lbl { background: #f3e5f5; color: #6a1b9a; }
+    .fep-body { padding: 10px 14px; }
+    #designQrJsonOutput { width: 100%; height: 210px; padding: 8px 10px; border: 1px solid #eee; border-radius: 6px; font-family: monospace; font-size: 0.72rem; background: #f9f9f9; resize: none; color: #333; line-height: 1.5; }
+    .field-row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 7px; background: #f9f9f9; margin-bottom: 5px; }
+    .field-row:hover { background: #f0f4ff; }
+    .field-row input[type="checkbox"] { width: 17px; height: 17px; accent-color: #1976d2; cursor: pointer; flex-shrink: 0; }
+    .field-row-label { flex: 1; font-size: 0.88rem; color: #333; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .field-row-edit { display: none; flex: 1; min-width: 0; }
+    .field-row-edit input { width: 100%; padding: 4px 8px; border: 1.5px solid #1976d2; border-radius: 5px; font-size: 0.85rem; outline: none; }
+    .btn-pencil { background: none; border: none; cursor: pointer; padding: 3px 5px; border-radius: 4px; color: #ccc; font-size: 0.9rem; line-height: 1; flex-shrink: 0; }
+    .btn-pencil:hover { color: #1976d2; background: #e3f2fd; }
+    .btn-pen-ok { padding: 3px 9px; background: #1976d2; border: none; border-radius: 5px; color: #fff; font-size: 0.75rem; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+    .btn-pen-ok:hover { background: #1565c0; }
+    .btn-del-field { background: none; border: none; cursor: pointer; padding: 3px 5px; border-radius: 4px; color: #ddd; font-size: 0.85rem; line-height: 1; flex-shrink: 0; }
+    .btn-del-field:hover { color: #e53935; background: #ffebee; }
+    .fep-add-row { padding: 8px 14px; border-top: 1px solid #f0f0f0; }
+    .btn-add-field { padding: 6px 14px; background: none; border: 1.5px dashed #bbb; border-radius: 6px; font-size: 0.82rem; color: #999; cursor: pointer; width: 100%; }
+    .btn-add-field:hover { border-color: #1976d2; color: #1976d2; background: #f5f9ff; }
+
+    /* Print Confirm Modal */
+    #printConfirmModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:998; align-items:center; justify-content:center; padding:16px; }
+    #printConfirmModal.show { display:flex; }
+    #printConfirmBox { position:relative; background:#fff; border-radius:16px; padding:28px 24px 20px; width:100%; max-width:360px; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,0.2); animation:popIn 0.22s cubic-bezier(0.34,1.56,0.64,1); }
+    .pcm-icon { font-size:2.4rem; margin-bottom:10px; }
+    .pcm-title { font-size:1.1rem; font-weight:700; color:#222; margin-bottom:4px; }
+    .pcm-sub { font-size:0.82rem; color:#999; margin-bottom:20px; }
+    .pcm-btns { display:flex; flex-direction:column; gap:8px; }
+    .btn-pcm-primary { padding:13px 16px; background:#1976d2; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:0.95rem; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:2px; touch-action:manipulation; }
+    .btn-pcm-primary:hover { background:#1565c0; }
+    .btn-pcm-primary small { font-size:0.72rem; opacity:0.8; font-weight:400; }
+    .btn-pcm-secondary { padding:12px 16px; background:#f5f5f5; color:#333; border:1px solid #ddd; border-radius:8px; cursor:pointer; font-size:0.95rem; font-weight:600; display:flex; flex-direction:column; align-items:center; gap:2px; touch-action:manipulation; }
+    .btn-pcm-secondary:hover { background:#e8e8e8; }
+    .btn-pcm-secondary small { font-size:0.72rem; color:#999; font-weight:400; }
+    .pcm-close { position:absolute; top:12px; right:14px; background:none; border:none; font-size:1.4rem; color:#bbb; cursor:pointer; line-height:1; padding:4px; border-radius:4px; }
+    .pcm-close:hover { color:#555; background:#f5f5f5; }
+
     /* Print Success */
     #printOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 999; align-items: center; justify-content: center; }
     #printOverlay.show { display: flex; }
@@ -207,6 +264,14 @@
       </div>
       <p class="scan-hint">กดปุ่มด้านล่างเพื่อสแกน QR Code</p>
       <button class="btn-primary" id="btnScan">Scan QR Code</button>
+
+      <!-- JSON Input -->
+      <div class="json-scan-section">
+        <p class="json-scan-or">— หรือป้อน JSON —</p>
+        <textarea id="jsonScanInput" placeholder='{"PLANT":"DFB2","VENDOR":"676742","P/N":"3475221400","QTY":500,"D/C":"260501 Rev.04"}'></textarea>
+        <div id="jsonScanError"></div>
+        <button class="btn-primary" id="btnJsonScan" style="width:100%">Scan</button>
+      </div>
     </div>
 
     <!-- Step 2 -->
@@ -242,16 +307,40 @@
         <div><label for="line">Line</label><input type="text" id="line" placeholder="เช่น STF-108" /></div>
       </div>
 
-      <!-- ── Data Split ── -->
-      <div class="data-split">
-        <!-- Left: QR JSON -->
-        <div class="data-panel">
-          <div class="data-panel-title">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
-            ข้อมูลใน QR Code
+      <div id="error"></div>
+      <div class="btn-row">
+        <button class="btn-primary" id="btnPreview">Preview</button>
+        <button class="btn-secondary" id="btnBack">Back</button>
+      </div>
+
+      <!-- Split: preview (left) + checklist (right) -->
+      <div class="print-split">
+        <!-- Left: Preview Result -->
+        <div>
+          <div id="previewPlaceholder" class="preview-placeholder-card">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
+            <p>กด Preview เพื่อดู Label</p>
           </div>
-          <textarea id="qrJsonOutput" readonly></textarea>
-          <p class="json-note">* traceId จะถูกสร้างอัตโนมัติเมื่อกด Preview</p>
+          <div id="previewResult" style="display:none">
+            <div class="tab-bar">
+              <button class="tab active" id="tabPreview">Label Preview</button>
+              <button class="tab" id="tabQrData">QR Data</button>
+              <button class="tab" id="tabZpl">ZPL Code</button>
+            </div>
+            <div id="panelPreview"><img id="previewImg" alt="Label preview" /></div>
+            <div id="panelQrData" style="display:none">
+              <textarea id="qrJsonOutput" readonly style="height:240px"></textarea>
+              <p class="json-note" style="margin-top:6px">* ข้อมูลทั้งหมดที่เข้ารหัสอยู่ใน QR Code</p>
+            </div>
+            <div id="panelZpl" style="display:none">
+              <div class="result-label-row">
+                <button class="btn-sm btn-sm-success" id="btnDownload">Download PNG</button>
+                <button class="btn-sm btn-sm-secondary" id="btnCopyZpl" style="margin-left:6px">Copy ZPL</button>
+              </div>
+              <textarea id="zplOutput" readonly></textarea>
+            </div>
+          </div>
+          
         </div>
 
         <!-- Right: Label Checklist -->
@@ -264,39 +353,18 @@
             <p class="field-check-empty">Scan QR เพื่อดูข้อมูล</p>
           </div>
         </div>
+
       </div>
 
-      <div id="error"></div>
-      <div class="btn-row">
-        <button class="btn-primary" id="btnPreview">Preview</button>
-        <button class="btn-secondary" id="btnBack">Back</button>
-      </div>
-
-      <!-- Step 3: Preview Result -->
-      <div id="previewResult">
-        <hr class="divider" />
-        <div class="tab-bar">
-          <button class="tab active" id="tabPreview">Label Preview</button>
-          <button class="tab" id="tabZpl">ZPL Code</button>
-        </div>
-        <div id="panelPreview"><img id="previewImg" alt="Label preview" /></div>
-        <div id="panelZpl" style="display:none">
-          <div class="result-label-row">
-            <button class="btn-sm btn-sm-success" id="btnDownload">Download PNG</button>
-            <button class="btn-sm btn-sm-secondary" id="btnCopyZpl" style="margin-left:6px">Copy ZPL</button>
-          </div>
-          <textarea id="zplOutput" readonly></textarea>
-        </div>
-        <hr class="divider" />
-        <p class="result-label">เลือก Printer</p>
-        <div class="printer-row">
-          <select id="printerSelect">
-            <option value="">-- เลือก Printer --</option>
-            <option value="10.204.37.10">🟢 Printer 1 (10.204.37.10)</option>
-            <option value="10.204.37.11">⚫ Printer 2 (10.204.37.11)</option>
-          </select>
-          <button class="btn-primary" id="btnPrint" disabled>Print</button>
-        </div>
+      <hr class="divider" />
+      <p class="result-label">เลือก Printer</p>
+      <div class="printer-row">
+        <select id="printerSelect">
+          <option value="">-- เลือก Printer --</option>
+          <option value="10.204.37.10">🟢 Printer 1 (10.204.37.10)</option>
+          <option value="10.204.37.11">⚫ Printer 2 (10.204.37.11)</option>
+        </select>
+        <button class="btn-primary" id="btnPrint" disabled>Print</button>
       </div>
     </div>
   </div>
@@ -349,14 +417,6 @@
               </div>
             </div>
           </div>
-          <!-- Fields to show on label -->
-          <div class="design-fields-card">
-            <div class="design-fields-header">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              Fields to show on label
-            </div>
-            <div class="design-fields-body" id="designFieldChecklist"></div>
-          </div>
         </div>
         <div class="design-preview-area">
           <p class="result-label" style="margin-bottom:10px">Preview (Sample Data)</p>
@@ -373,6 +433,28 @@
           <img id="designPreviewImg" alt="Design preview" />
         </div>
       </div>
+      <!-- Field Editor Split -->
+      <div class="field-editor-split">
+        <div class="fep">
+          <div class="fep-header fep-qr">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
+            ข้อมูลใน QR CODE
+          </div>
+          <div class="fep-body">
+            <textarea id="designQrJsonOutput" readonly></textarea>
+          </div>
+        </div>
+        <div class="fep">
+          <div class="fep-header fep-lbl">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            ข้อมูลที่แสดงบน LABEL
+          </div>
+          <div class="fep-body" id="designFieldList"></div>
+          <div class="fep-add-row">
+            <button class="btn-add-field" onclick="addDesignCustomField()">+ Add Field</button>
+          </div>
+        </div>
+      </div>
       <div class="btn-row" style="margin-top:20px">
         <button class="btn-primary" id="btnSaveLayout">Save Layout</button>
         <button class="btn-secondary" id="btnApplyToPrint" style="display:none">← Apply to Print</button>
@@ -380,6 +462,27 @@
     </div>
   </div>
 
+  <!-- Print Confirm Modal -->
+  <div id="printConfirmModal">
+    <div id="printConfirmBox">
+      <button class="pcm-close" id="btnPrintCancel">✕</button>
+      <div class="pcm-icon">🖨️</div>
+      <div class="pcm-title">Ready to Print?</div>
+      <div class="pcm-sub" id="pcmSub">—</div>
+      <div class="pcm-btns">
+        <button class="btn-pcm-primary" id="btnPrintReceive">
+          Print &amp; Receive
+          <small>พิมพ์และบันทึก Receive transaction</small>
+        </button>
+        <button class="btn-pcm-secondary" id="btnPrintOnly">
+          Print Only
+          <small>พิมพ์อย่างเดียว ไม่บันทึก</small>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Success Overlay -->
   <div id="printOverlay">
     <div id="printOverlayBox">
       <div class="print-check">✓</div>
@@ -415,6 +518,7 @@
       parsedQrData: {},
       selectedLayoutId: null,
       hasPreviewedOnce: false,
+      activeLayoutFields: null,
     };
     let ds = { mode: 'list', editId: null, fromPrint: false, layouts: [], pendingFields: null };
     let designTimer = null, designBlobUrl = null, currentBlobUrl = null;
@@ -445,19 +549,7 @@
     }
 
     // ── Scan ──────────────────────────────────────────────
-    document.getElementById('btnScan').addEventListener('click', () => {
-      printState.parsedQrData = { ...MOCK_QR_OBJ };
-      printState.scannedData = JSON.stringify(printState.parsedQrData);
-      document.getElementById('qrDataDisplay').textContent = printState.parsedQrData.lotNo || printState.scannedData;
-      document.getElementById('stepScan').style.display = 'none';
-      document.getElementById('stepForm').style.display = 'block';
-      document.getElementById('previewResult').style.display = 'none';
-      document.getElementById('btnPrint').disabled = true;
-      printState.hasPreviewedOnce = false;
-      setStep(2);
-      loadLayoutDropdown();
-      updateDataPanel();
-    });
+    document.getElementById('btnScan').addEventListener('click', () => doScan({ ...MOCK_QR_OBJ }, 'Mock Scan'));
 
     document.getElementById('btnBack').addEventListener('click', () => {
       document.getElementById('stepForm').style.display = 'none';
@@ -486,24 +578,39 @@
       const preview = { ...fullData, traceId: '(auto-generated)' };
       document.getElementById('qrJsonOutput').value = JSON.stringify(preview, null, 2);
 
-      // Render checklist
-      renderChecklist(fullData);
+      // Render checklist with optional custom labels from selected layout
+      renderChecklist(fullData, printState.activeLayoutFields);
     }
 
-    function renderChecklist(data) {
+    function parseLayoutFields(layout) {
+      if (!layout?.labelFieldsJson) return null;
+      try {
+        const parsed = JSON.parse(layout.labelFieldsJson);
+        if (!parsed.length) return null;
+        if (typeof parsed[0] === 'object') return parsed; // new format: [{key,label,show}]
+        // Old format: string[] of SHOWN keys — absent keys mean show:false
+        const shownKeys = new Set(parsed);
+        return ALL_FIELD_KEYS.map(k => ({ key: k, label: FIELD_LABELS[k] || k, show: shownKeys.has(k) }));
+      } catch { return null; }
+    }
+
+    function renderChecklist(data, layoutFields) {
       const container = document.getElementById('fieldChecklist');
       const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== '');
       if (entries.length === 0) {
         container.innerHTML = '<p class="field-check-empty">ไม่มีข้อมูล</p>';
         return;
       }
-      container.innerHTML = entries.map(([k, v]) =>
-        `<div class="field-check-item">
-          <input type="checkbox" id="chk_${cid(k)}" data-key="${escHtml(k)}" checked />
-          <label class="fci-label" for="chk_${cid(k)}">${FIELD_LABELS[k] || k}</label>
-          <span class="fci-value">${escHtml(String(v))}</span>
-        </div>`
-      ).join('');
+      container.innerHTML = entries.map(([k, v]) => {
+        const lf = layoutFields?.find(f => f.key === k);
+        const label = lf ? lf.label : (FIELD_LABELS[k] || k);
+        const checked = lf ? lf.show : true;
+        return `<div class="field-check-item">
+          <input type="checkbox" id="chk_${cid(k)}" data-key="${escHtml(k)}" ${checked ? 'checked' : ''} />
+          <label class="fci-label" for="chk_${cid(k)}">${escHtml(label)}</label>
+          <input type="text" class="fci-input" id="fci_val_${cid(k)}" value="${escHtml(String(v)).replace(/"/g,'&quot;')}" placeholder="—" onclick="event.stopPropagation()" />
+        </div>`;
+      }).join('');
     }
 
     function getCheckedFields(data) {
@@ -513,7 +620,13 @@
           const cb = document.getElementById('chk_' + cid(k));
           return cb ? cb.checked : false;
         })
-        .map(([k, v]) => ({ label: FIELD_LABELS[k] || k, value: String(v) }));
+        .map(([k, v]) => {
+          const lf = printState.activeLayoutFields?.find(f => f.key === k);
+          const label = lf ? lf.label : (FIELD_LABELS[k] || k);
+          const inputEl = document.getElementById('fci_val_' + cid(k));
+          const value = inputEl?.value.trim() || String(v);
+          return { label, value };
+        });
     }
 
     // ── Layout Dropdown ───────────────────────────────────
@@ -544,13 +657,17 @@
       const opt = this.options[this.selectedIndex];
       const btn = document.getElementById('btnCustomize');
       if (this.value) {
-        applyLayoutToSliders(JSON.parse(opt.getAttribute('data-layout')));
+        const layout = JSON.parse(opt.getAttribute('data-layout'));
+        applyLayoutToSliders(layout);
         printState.selectedLayoutId = +this.value;
+        printState.activeLayoutFields = parseLayoutFields(layout);
         btn.disabled = false;
       } else {
         printState.selectedLayoutId = null;
+        printState.activeLayoutFields = null;
         btn.disabled = true;
       }
+      if (document.getElementById('stepForm').style.display !== 'none') updateDataPanel();
     });
 
     document.getElementById('btnCustomize').addEventListener('click', () => {
@@ -608,11 +725,11 @@
         currentBlobUrl = URL.createObjectURL(blob);
         document.getElementById('previewImg').src = currentBlobUrl;
         document.getElementById('zplOutput').value = zpl;
+        document.getElementById('previewPlaceholder').style.display = 'none';
         document.getElementById('previewResult').style.display = 'block';
         printState.hasPreviewedOnce = true;
         updatePrintButton();
         setStep(3);
-        document.getElementById('previewResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch(e) { showError('ไม่สามารถเชื่อมต่อ API: ' + e.message);
       } finally { btn.textContent = 'Preview'; btn.disabled = false; }
     }
@@ -639,13 +756,15 @@
 
     // ── Result Tabs ───────────────────────────────────────
     document.getElementById('tabPreview').addEventListener('click', () => switchResultTab('preview'));
+    document.getElementById('tabQrData').addEventListener('click', () => switchResultTab('qrdata'));
     document.getElementById('tabZpl').addEventListener('click', () => switchResultTab('zpl'));
     function switchResultTab(tab) {
-      const isP = tab === 'preview';
-      document.getElementById('tabPreview').classList.toggle('active', isP);
-      document.getElementById('tabZpl').classList.toggle('active', !isP);
-      document.getElementById('panelPreview').style.display = isP ? 'block' : 'none';
-      document.getElementById('panelZpl').style.display = isP ? 'none' : 'block';
+      document.getElementById('tabPreview').classList.toggle('active', tab === 'preview');
+      document.getElementById('tabQrData').classList.toggle('active', tab === 'qrdata');
+      document.getElementById('tabZpl').classList.toggle('active', tab === 'zpl');
+      document.getElementById('panelPreview').style.display = tab === 'preview' ? 'block' : 'none';
+      document.getElementById('panelQrData').style.display = tab === 'qrdata' ? 'block' : 'none';
+      document.getElementById('panelZpl').style.display = tab === 'zpl' ? 'block' : 'none';
     }
     document.getElementById('btnDownload').addEventListener('click', () => {
       if (!currentBlobUrl) return;
@@ -664,40 +783,136 @@
       document.getElementById('btnPrint').disabled = !ip || !printState.hasPreviewedOnce;
     }
     document.getElementById('printerSelect').addEventListener('change', updatePrintButton);
+    // ── Print Confirm Modal ───────────────────────────────
     document.getElementById('btnPrint').addEventListener('click', () => {
+      const printerSel = document.getElementById('printerSelect');
+      const printerName = printerSel.options[printerSel.selectedIndex]?.text || '—';
+      document.getElementById('pcmSub').textContent = `Printer: ${printerName}`;
+      document.getElementById('printConfirmModal').classList.add('show');
+    });
+
+    document.getElementById('btnPrintCancel').addEventListener('click', () => {
+      document.getElementById('printConfirmModal').classList.remove('show');
+    });
+
+    document.getElementById('btnPrintOnly').addEventListener('click', () => {
+      document.getElementById('printConfirmModal').classList.remove('show');
+      executePrint(false);
+    });
+
+    document.getElementById('btnPrintReceive').addEventListener('click', () => {
+      document.getElementById('printConfirmModal').classList.remove('show');
+      executePrint(true);
+    });
+
+    function executePrint(withReceive) {
       const btn = document.getElementById('btnPrint');
       btn.textContent = 'กำลังส่ง...'; btn.disabled = true;
-      setTimeout(() => { btn.textContent = 'Print'; btn.disabled = false; showPrintSuccess(); }, 1500);
-    });
-    function showPrintSuccess() {
+      setTimeout(() => {
+        btn.textContent = 'Print'; btn.disabled = false;
+        showPrintSuccess(withReceive);
+      }, 1500);
+    }
+
+    function showPrintSuccess(withReceive = false) {
+      const box = document.getElementById('printOverlayBox');
+      box.querySelector('p').textContent = withReceive ? 'Print & Received!' : 'Print Success';
       const ov = document.getElementById('printOverlay');
       ov.classList.add('show'); setTimeout(() => ov.classList.remove('show'), 2200);
     }
 
-    // ── Design: Field Checklist ───────────────────────────
+    // ── Design: Field List ────────────────────────────────
     const ALL_FIELD_KEYS = Object.keys(FIELD_LABELS);
+    const DESIGN_SAMPLE = { 'PLANT':'DFB2', 'VENDOR':'676742', 'P/N':'3475221400', 'QTY':500, 'D/C':'260501 Rev.04', 'W/O':'3622502555', 'LINE':'F05', 'createdAt':'20260513' };
 
-    function populateDesignFieldChecklist(selectedKeys) {
-      const container = document.getElementById('designFieldChecklist');
-      container.innerHTML = ALL_FIELD_KEYS.map(k => `
-        <div class="field-check-item">
-          <input type="checkbox" id="dfc_${cid(k)}" data-key="${escHtml(k)}" ${selectedKeys.includes(k) ? 'checked' : ''} />
-          <label class="fci-label" for="dfc_${cid(k)}">${FIELD_LABELS[k]}</label>
-        </div>`).join('');
-      container.querySelectorAll('input[type="checkbox"]').forEach(cb =>
-        cb.addEventListener('change', scheduleDesignPreview)
-      );
+    function populateDesignFieldList(fieldDefs) {
+      document.getElementById('designQrJsonOutput').value =
+        JSON.stringify({ ...DESIGN_SAMPLE, traceId: 'TRC-20260515-ABCD1234' }, null, 2);
+      const container = document.getElementById('designFieldList');
+      container.innerHTML = fieldDefs.map(f => {
+        const safeKey = f.key.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        const isCustom = !ALL_FIELD_KEYS.includes(f.key);
+        return `<div class="field-row" data-key="${escHtml(f.key)}">
+          <input type="checkbox" id="dfl_${cid(f.key)}" ${f.show ? 'checked' : ''} onchange="scheduleDesignPreview()" />
+          <span class="field-row-label" id="dfl_lbl_${cid(f.key)}">${escHtml(f.label)}</span>
+          <div class="field-row-edit" id="dfl_edit_${cid(f.key)}">
+            <input type="text" id="dfl_inp_${cid(f.key)}" value="${escHtml(f.label)}" onkeydown="if(event.key==='Enter')confirmFieldEdit('${safeKey}')" />
+          </div>
+          <button class="btn-pencil" id="dfl_pen_${cid(f.key)}" onclick="toggleFieldEdit('${safeKey}')" title="แก้ชื่อ field">✏️</button>
+          <button class="btn-pen-ok" id="dfl_ok_${cid(f.key)}" onclick="confirmFieldEdit('${safeKey}')" style="display:none">OK</button>
+          ${isCustom ? `<button class="btn-del-field" onclick="this.closest('.field-row').remove()" title="ลบ field นี้">🗑</button>` : ''}
+        </div>`;
+      }).join('');
     }
 
-    function getDesignCheckedKeys() {
-      return ALL_FIELD_KEYS.filter(k => document.getElementById('dfc_' + cid(k))?.checked);
+    function toggleFieldEdit(key) {
+      const k = cid(key);
+      const lbl = document.getElementById('dfl_lbl_' + k);
+      const edit = document.getElementById('dfl_edit_' + k);
+      const ok = document.getElementById('dfl_ok_' + k);
+      const pen = document.getElementById('dfl_pen_' + k);
+      if (edit.style.display === 'flex') {
+        edit.style.display = 'none'; lbl.style.display = '';
+        ok.style.display = 'none'; pen.textContent = '✏️';
+        document.getElementById('dfl_inp_' + k).value = lbl.textContent;
+      } else {
+        edit.style.display = 'flex'; lbl.style.display = 'none';
+        ok.style.display = ''; pen.textContent = '✕';
+        const inp = document.getElementById('dfl_inp_' + k);
+        inp.value = lbl.textContent; inp.focus(); inp.select();
+      }
+    }
+
+    function confirmFieldEdit(key) {
+      const k = cid(key);
+      const newLabel = document.getElementById('dfl_inp_' + k).value.trim() || (FIELD_LABELS[key] || key);
+      const lbl = document.getElementById('dfl_lbl_' + k);
+      lbl.textContent = newLabel; lbl.style.display = '';
+      document.getElementById('dfl_edit_' + k).style.display = 'none';
+      document.getElementById('dfl_ok_' + k).style.display = 'none';
+      document.getElementById('dfl_pen_' + k).textContent = '✏️';
+      scheduleDesignPreview();
+    }
+
+    function getDesignFields() {
+      return Array.from(document.querySelectorAll('#designFieldList .field-row')).map(row => {
+        const k = row.dataset.key;
+        const ck = cid(k);
+        const cbEl = document.getElementById('dfl_' + ck);
+        const lblEl = document.getElementById('dfl_lbl_' + ck);
+        const inpEl = document.getElementById('dfl_inp_' + ck);
+        const show = cbEl?.checked ?? true;
+        const label = (inpEl && lblEl && lblEl.style.display === 'none')
+          ? (inpEl.value.trim() || FIELD_LABELS[k] || k)
+          : (lblEl?.textContent?.trim() || FIELD_LABELS[k] || k);
+        return { key: k, label, show };
+      });
+    }
+
+    function addDesignCustomField() {
+      const key = '_c' + Date.now();
+      const ck = cid(key);
+      const row = document.createElement('div');
+      row.className = 'field-row';
+      row.dataset.key = key;
+      row.innerHTML = `
+        <input type="checkbox" id="dfl_${ck}" checked onchange="scheduleDesignPreview()" />
+        <span class="field-row-label" id="dfl_lbl_${ck}" style="display:none"></span>
+        <div class="field-row-edit" id="dfl_edit_${ck}" style="display:flex">
+          <input type="text" id="dfl_inp_${ck}" placeholder="ชื่อ field..." onkeydown="if(event.key==='Enter')confirmFieldEdit('${key}')" />
+        </div>
+        <button class="btn-pencil" id="dfl_pen_${ck}" onclick="toggleFieldEdit('${key}')" title="แก้ชื่อ">✕</button>
+        <button class="btn-pen-ok" id="dfl_ok_${ck}" onclick="confirmFieldEdit('${key}')" style="display:inline-block">OK</button>
+        <button class="btn-del-field" onclick="this.closest('.field-row').remove()" title="ลบ">🗑</button>`;
+      document.getElementById('designFieldList').appendChild(row);
+      document.getElementById('dfl_inp_' + ck).focus();
     }
 
     function getCheckedKeysFromPrintList() {
       return ALL_FIELD_KEYS.filter(k => document.getElementById('chk_' + cid(k))?.checked);
     }
 
-    function buildZplTemplate(selectedKeys) {
+    function buildZplTemplate(fields) {
       const qrX = +document.getElementById('qrX').value;
       const qrY = +document.getElementById('qrY').value;
       const qrSize = +document.getElementById('qrSize').value;
@@ -708,11 +923,10 @@
       const lh = Math.round(fs * 1.5);
       let zpl = `^XA\n^CI28\n`;
       zpl += `^FO${qrX},${qrY}^BQN,2,${qrSize}^FDLA,{BarcodeData}^FS\n`;
-      selectedKeys.forEach((k, i) => {
+      fields.filter(f => f.show).forEach((f, i) => {
         const y = dataY + i * lh;
-        const label = FIELD_LABELS[k] || k;
-        zpl += `^FO${dataX},${y}^A0N,${fs},${fs}^FD${label}:^FS\n`;
-        zpl += `^FO${dataX + vo},${y}^A0N,${fs},${fs}^FD{${k}}^FS\n`;
+        zpl += `^FO${dataX},${y}^A0N,${fs},${fs}^FD${f.label}:^FS\n`;
+        zpl += `^FO${dataX + vo},${y}^A0N,${fs},${fs}^FD{${f.key}}^FS\n`;
       });
       return zpl + `^XZ`;
     }
@@ -736,12 +950,11 @@
       }, 900);
     }
     async function doDesignPreview() {
-      const SAMPLE_DATA = { 'PLANT':'DFB2', 'VENDOR':'676742', 'P/N':'3475221400', 'QTY':500, 'D/C':'260501 Rev.04', 'W/O':'3622502555', 'LINE':'F05', 'createdAt':'20260513' };
-      const sampleQr = JSON.stringify({ ...SAMPLE_DATA, traceId:'TRC-20260513-ABCD1234' });
-      const checkedKeys = getDesignCheckedKeys();
-      const sampleFields = (checkedKeys.length ? checkedKeys : ALL_FIELD_KEYS)
-        .filter(k => SAMPLE_DATA[k] !== undefined)
-        .map(k => ({ label: FIELD_LABELS[k] || k, value: String(SAMPLE_DATA[k]) }));
+      const sampleQr = JSON.stringify({ ...DESIGN_SAMPLE, traceId:'TRC-20260513-ABCD1234' });
+      const fields = getDesignFields();
+      const sampleFields = fields
+        .filter(f => f.show && DESIGN_SAMPLE[f.key] !== undefined)
+        .map(f => ({ label: f.label, value: String(DESIGN_SAMPLE[f.key]) }));
       const zpl = buildZpl({ qrContent: sampleQr, textFields: sampleFields });
       const dpi = document.getElementById('designDpi').value;
       const w = document.getElementById('designWidth').value;
@@ -807,8 +1020,11 @@
       document.getElementById('designList').style.display = 'none';
       document.getElementById('designPreviewImg').style.display = 'none';
       document.getElementById('designPreviewHint').style.display = 'block';
-      const initFields = ds.pendingFields ?? ALL_FIELD_KEYS;
-      populateDesignFieldChecklist(initFields);
+      const pendingKeys = ds.pendingFields;
+      const initFields = ALL_FIELD_KEYS.map(k => ({
+        key: k, label: FIELD_LABELS[k] || k, show: pendingKeys ? pendingKeys.includes(k) : true
+      }));
+      populateDesignFieldList(initFields);
       ds.pendingFields = null;
       setPageTab('design'); ds.mode = 'edit';
     }
@@ -820,14 +1036,22 @@
       document.getElementById('btnBackEdit').textContent = fromPrint ? '← Back to Print' : '← Layouts';
       document.getElementById('btnApplyToPrint').style.display = fromPrint ? 'inline-flex' : 'none';
       applyLayoutToSliders(layout);
-      // Field checklist: priority → pendingFields (from print) → stored template → all
+      // Field list: priority → pendingFields (from print) → stored layout → all shown
       let initFields;
-      if (ds.pendingFields) {
-        initFields = ds.pendingFields;
-      } else if (layout.labelFieldsJson) {
-        try { initFields = JSON.parse(layout.labelFieldsJson); } catch { initFields = ALL_FIELD_KEYS; }
-      } else { initFields = ALL_FIELD_KEYS; }
-      populateDesignFieldChecklist(initFields);
+      const pendingKeys = ds.pendingFields;
+      if (pendingKeys) {
+        initFields = ALL_FIELD_KEYS.map(k => ({ key: k, label: FIELD_LABELS[k] || k, show: pendingKeys.includes(k) }));
+      } else {
+        const layoutFields = parseLayoutFields(layout);
+        initFields = ALL_FIELD_KEYS.map(k => {
+          const lf = layoutFields?.find(f => f.key === k);
+          return lf ?? { key: k, label: FIELD_LABELS[k] || k, show: true };
+        });
+        // Append any custom fields saved in the layout
+        const customFields = layoutFields?.filter(f => !ALL_FIELD_KEYS.includes(f.key)) ?? [];
+        initFields = [...initFields, ...customFields];
+      }
+      populateDesignFieldList(initFields);
       ds.pendingFields = null;
       document.getElementById('designEdit').style.display = 'block';
       document.getElementById('designList').style.display = 'none';
@@ -855,15 +1079,16 @@
     async function saveLayout() {
       const name = document.getElementById('editName').value.trim();
       if (!name) { alert('กรุณาใส่ Template Name'); return; }
-      const selectedKeys = getDesignCheckedKeys();
+      const fields = getDesignFields();
       const body = {
         templateName: name, description: document.getElementById('editDesc').value.trim(),
         qrX:+document.getElementById('qrX').value, qrY:+document.getElementById('qrY').value,
         qrSize:+document.getElementById('qrSize').value, dataX:+document.getElementById('dataX').value,
         dataY:+document.getElementById('dataY').value, fontSize:+document.getElementById('fontSize').value,
         valOffset:+document.getElementById('valOffset').value,
-        zplTemplate: buildZplTemplate(selectedKeys),
-        labelFields: selectedKeys,
+        zplTemplate: buildZplTemplate(fields),
+        labelFields: fields.filter(f => f.show).map(f => f.key),
+        labelFieldsJson: JSON.stringify(fields),
       };
       const btn = document.getElementById('btnSaveLayout');
       btn.textContent='Saving...'; btn.disabled=true;
@@ -903,6 +1128,34 @@
     function showError(msg) { const e=document.getElementById('error'); e.textContent=msg; e.style.display='block'; }
     function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
     function fmtDate(iso) { const d=new Date(iso); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
+
+    function doScan(data, displayName) {
+      printState.parsedQrData = { ...data };
+      printState.scannedData = JSON.stringify(data);
+      document.getElementById('qrDataDisplay').textContent = displayName || printState.scannedData.slice(0,40);
+      document.getElementById('stepScan').style.display = 'none';
+      document.getElementById('stepForm').style.display = 'block';
+      document.getElementById('previewResult').style.display = 'none';
+      document.getElementById('previewPlaceholder').style.display = 'block';
+      document.getElementById('btnPrint').disabled = true;
+      printState.hasPreviewedOnce = false;
+      setStep(2); loadLayoutDropdown(); updateDataPanel();
+    }
+
+    document.getElementById('btnJsonScan').addEventListener('click', () => {
+      const raw = document.getElementById('jsonScanInput').value.trim();
+      const errEl = document.getElementById('jsonScanError');
+      errEl.style.display = 'none';
+      if (!raw) { errEl.textContent = 'กรุณาป้อน JSON'; errEl.style.display = 'block'; return; }
+      try {
+        const data = JSON.parse(raw);
+        if (typeof data !== 'object' || Array.isArray(data)) throw new Error('ต้องเป็น JSON object {}');
+        doScan(data, 'JSON Input');
+      } catch(e) {
+        errEl.textContent = 'JSON ไม่ถูกต้อง: ' + e.message;
+        errEl.style.display = 'block';
+      }
+    });
   </script>
 </body>
 </html>

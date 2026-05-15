@@ -114,10 +114,16 @@
     });
 
     document.getElementById('btnGetLocation').addEventListener('click', () => {
+      console.log('--- [1] Button clicked ---');
+      console.log('Method:', selectedMethod);
+
       if (!navigator.geolocation) {
+        console.log('[2] ❌ navigator.geolocation ไม่มี — browser ไม่รองรับ');
         showStatus('error', 'Browser นี้ไม่รองรับ Geolocation');
         return;
       }
+      console.log('[2] ✅ navigator.geolocation พร้อมใช้งาน');
+
       const btn = document.getElementById('btnGetLocation');
       const isGps = selectedMethod === 'gps';
       btn.disabled = true;
@@ -129,11 +135,25 @@
 
       const options = isGps
         ? { enableHighAccuracy: true,  timeout: 60000, maximumAge: 0 }
-        : { enableHighAccuracy: false, timeout: 30000, maximumAge: 60000 };
+        : { enableHighAccuracy: false, timeout: 30000, maximumAge: 0 };
+
+      console.log('[3] กำลังเรียก getCurrentPosition() — options:', options);
 
       navigator.geolocation.getCurrentPosition(
         async pos => {
-          const { latitude, longitude, accuracy } = pos.coords;
+          console.log('[4] ✅ SUCCESS callback ถูกเรียก');
+          const { latitude, longitude, accuracy, altitude, heading, speed } = pos.coords;
+        
+          console.group('📍 Geolocation Result');
+          console.log('Latitude  :', latitude);
+          console.log('Longitude :', longitude);
+          console.log('Accuracy  :', accuracy, 'm');
+          console.log('Altitude  :', altitude ?? 'N/A');
+          console.log('Heading   :', heading  ?? 'N/A');
+          console.log('Speed     :', speed    ?? 'N/A');
+          console.log('Method    :', selectedMethod);
+          console.log('Timestamp :', new Date().toISOString());
+          console.groupEnd();
           document.getElementById('valLat').textContent  = latitude.toFixed(6);
           document.getElementById('valLng').textContent  = longitude.toFixed(6);
           document.getElementById('valAcc').textContent  = `±${Math.round(accuracy)} m`;
@@ -141,19 +161,26 @@
           document.getElementById('coordGrid').style.display = 'grid';
 
           try {
+            console.log('[5] กำลัง POST ไป /api/locationlogs ...');
             await fetch('/api/locationlogs', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ latitude, longitude, accuracy, action: 'receive', method: selectedMethod })
             });
+            console.log('[6] ✅ บันทึก server สำเร็จ');
             showStatus('success', `✓ บันทึกสำเร็จ (${isGps ? 'GPS' : 'WiFi'})`);
-          } catch {
+          } catch (e) {
+            console.log('[6] ❌ บันทึก server ไม่ได้:', e.message);
             showStatus('error', 'ได้ตำแหน่งแล้ว แต่บันทึกลง server ไม่ได้');
           }
           btn.disabled = false;
           document.querySelectorAll('.method-btn').forEach(b => b.disabled = false);
         },
         err => {
+          console.log('[4] ❌ ERROR callback ถูกเรียก');
+          console.log('    err.code   :', err.code);
+          console.log('    err.message:', err.message);
+          console.log('    code หมายความว่า:', {1:'PERMISSION_DENIED', 2:'POSITION_UNAVAILABLE', 3:'TIMEOUT'}[err.code]);
           const msgs = {
             1: 'Permission ถูกปฏิเสธ — กรุณาอนุญาต Location ใน browser setting',
             2: isGps ? 'รับสัญญาณ GPS ไม่ได้ — ลองย้ายไปใกล้หน้าต่างหรือใช้ WiFi แทน'

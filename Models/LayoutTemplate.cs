@@ -29,4 +29,5 @@ public class LayoutTemplateRequest
   public int ValOffset { get; set; } = 120;
   public string ZplTemplate { get; set; } = "";
   public List<string> LabelFields { get; set; } = [];
+  public string? LabelFieldsJson { get; set; }
 }
