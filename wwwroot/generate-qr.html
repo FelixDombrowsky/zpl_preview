@@ -76,10 +76,13 @@
     .field-check-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 7px; background: #f9f9f9; cursor: pointer; transition: background 0.15s; }
     .field-check-item:hover { background: #f0f4ff; }
     .field-check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1976d2; cursor: pointer; flex-shrink: 0; }
-    .field-check-item .fci-label { font-size: 0.88rem; color: #333; flex: 1; cursor: pointer; }
-    .fci-input { flex: 0 1 120px; min-width: 0; border: 1px solid transparent; border-radius: 5px; background: transparent; font-size: 0.78rem; font-family: monospace; color: #888; text-align: right; padding: 3px 6px; outline: none; transition: background 0.15s, border-color 0.15s; }
-    .fci-input:hover { background: #f0f0f0; border-color: #e0e0e0; }
-    .fci-input:focus { background: #e8f0fe; border-color: #90caf9; color: #1a237e; text-align: left; }
+    .field-check-item .fci-label { font-size: 0.88rem; color: #333; flex: 0 0 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+    .field-check-item .field-var-badge { font-size: 0.7rem; }
+    .req-badge { font-size: 0.8rem; font-weight: 700; color: #e53935; flex-shrink: 0; line-height: 1; margin-right: -4px; }
+    .fci-input { flex: 1; min-width: 0; border: 1px solid #e8e8e8; border-radius: 5px; background: #fafafa; font-size: 0.82rem; font-family: monospace; color: #444; padding: 4px 8px; outline: none; transition: background 0.15s, border-color 0.15s; }
+    .fci-input:hover { background: #f0f0f0; border-color: #ccc; }
+    .fci-input:focus { background: #fff; border-color: #1976d2; color: #1a237e; }
+    .fci-input::placeholder { color: #ccc; }
     .field-check-empty { font-size: 0.85rem; color: #bbb; text-align: center; padding: 20px 0; }
 
     /* JSON Scan Section */
@@ -191,6 +194,11 @@
     .btn-pencil:hover { color: #1976d2; background: #e3f2fd; }
     .btn-pen-ok { padding: 3px 9px; background: #1976d2; border: none; border-radius: 5px; color: #fff; font-size: 0.75rem; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
     .btn-pen-ok:hover { background: #1565c0; }
+    .field-var-badge { font-size: 0.7rem; font-family: monospace; color: #1565c0; background: #e3f2fd; border-radius: 4px; padding: 2px 6px; white-space: nowrap; flex-shrink: 0; }
+    .design-zpl-section { margin-top: 16px; }
+    .design-zpl-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .design-zpl-header span { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #888; }
+    #designZplOutput { width: 100%; height: 160px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-family: monospace; font-size: 0.75rem; background: #fafafa; resize: vertical; color: #333; line-height: 1.5; }
     .btn-del-field { background: none; border: none; cursor: pointer; padding: 3px 5px; border-radius: 4px; color: #ddd; font-size: 0.85rem; line-height: 1; flex-shrink: 0; }
     .btn-del-field:hover { color: #e53935; background: #ffebee; }
     .fep-add-row { padding: 8px 14px; border-top: 1px solid #f0f0f0; }
@@ -299,12 +307,6 @@
         </div>
         <div><label for="width">Width (inch)</label><input type="number" id="width" value="4" min="0.1" step="0.1" /></div>
         <div><label for="height">Height (inch)</label><input type="number" id="height" value="3" min="0.1" step="0.1" /></div>
-      </div>
-
-      <!-- W/O + Line -->
-      <div class="form-grid-2">
-        <div><label for="wo">Work Order (W/O)</label><input type="text" id="wo" placeholder="เช่น 14955651" /></div>
-        <div><label for="line">Line</label><input type="text" id="line" placeholder="เช่น STF-108" /></div>
       </div>
 
       <div id="error"></div>
@@ -419,7 +421,6 @@
           </div>
         </div>
         <div class="design-preview-area">
-          <p class="result-label" style="margin-bottom:10px">Preview (Sample Data)</p>
           <div class="design-dim-grid">
             <div><label for="designDpi" style="font-size:0.78rem">DPI</label><select id="designDpi" style="padding:6px;font-size:0.85rem"><option value="8dpmm">8 dpmm</option><option value="12dpmm">12 dpmm</option><option value="24dpmm">24 dpmm</option></select></div>
             <div><label for="designWidth" style="font-size:0.78rem">Width</label><input type="number" id="designWidth" value="4" min="0.1" step="0.1" style="padding:6px;font-size:0.85rem" /></div>
@@ -429,31 +430,33 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.82"/></svg>
             กำลัง refresh...
           </div>
-          <p class="design-preview-hint" id="designPreviewHint">ขยับ slider เพื่อดู preview</p>
-          <img id="designPreviewImg" alt="Design preview" />
+          <div class="tab-bar" style="margin-bottom:12px">
+            <button class="tab active" id="dTabPreview">Label Preview</button>
+            <button class="tab" id="dTabQr">QR Data</button>
+            <button class="tab" id="dTabZpl">ZPL Code</button>
+          </div>
+          <div id="dPanelPreview">
+            <p class="design-preview-hint" id="designPreviewHint">ขยับ slider เพื่อดู preview</p>
+            <img id="designPreviewImg" alt="Design preview" />
+          </div>
+          <div id="dPanelQr" style="display:none">
+            <textarea id="designQrJsonOutput" readonly style="height:280px"></textarea>
+          </div>
+          <div id="dPanelZpl" style="display:none">
+            <div class="result-label-row" style="margin-bottom:6px">
+              <button class="btn-sm btn-sm-secondary" id="btnCopyDesignZpl">Copy ZPL</button>
+            </div>
+            <textarea id="designZplOutput" readonly style="height:256px"></textarea>
+          </div>
         </div>
       </div>
-      <!-- Field Editor Split -->
-      <div class="field-editor-split">
-        <div class="fep">
-          <div class="fep-header fep-qr">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="4" height="4"/></svg>
-            ข้อมูลใน QR CODE
-          </div>
-          <div class="fep-body">
-            <textarea id="designQrJsonOutput" readonly></textarea>
-          </div>
+      <!-- Field List -->
+      <div class="fep" style="margin-top:16px">
+        <div class="fep-header fep-lbl">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          ข้อมูลที่แสดงบน LABEL
         </div>
-        <div class="fep">
-          <div class="fep-header fep-lbl">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-            ข้อมูลที่แสดงบน LABEL
-          </div>
-          <div class="fep-body" id="designFieldList"></div>
-          <div class="fep-add-row">
-            <button class="btn-add-field" onclick="addDesignCustomField()">+ Add Field</button>
-          </div>
-        </div>
+        <div class="fep-body" id="designFieldList"></div>
       </div>
       <div class="btn-row" style="margin-top:20px">
         <button class="btn-primary" id="btnSaveLayout">Save Layout</button>
@@ -493,21 +496,30 @@
   <script>
     // ── Mock Data ─────────────────────────────────────────
     const MOCK_QR_OBJ = {
-      'PLANT':  'DFB2',
-      'VENDOR': '676742',
-      'P/N':    '3475221400',
-      'QTY':    500,
-      'D/C':    '260501 Rev.04'
+      'partNo':          '4104097105M',
+      'quantity':        100,
+      'unit':            'PCE',
+      'vendor':          '676894',
+      'dateCode':        '260309',
+      'tradingCode':     '06',
+      'po':              'T3FY261023',
+      'inventoryNo':     'QQT20260251',
+      'traceId':         '20260309000059',
     };
     const FIELD_LABELS = {
-      'PLANT':     'PLANT',
-      'VENDOR':    'VENDOR',
-      'P/N':       'P/N',
-      'QTY':       'QTY',
-      'D/C':       'D/C',
-      'W/O':       'W/O',
-      'LINE':      'LINE',
-      'createdAt': 'Created At'
+      'partNo':          'P/N',
+      'quantity':        'QTY',
+      'unit':            'UNIT',
+      'vendor':          'VENDOR',
+      'dateCode':        'D/C',
+      'tradingCode':     'T/C',
+      'po':              'PO',
+      'inventoryNo':     'I/N',
+      'traceId':         'TRACE ID',
+      'workOrder':       'W/O',
+      'line':            'LINE',
+      'internalTraceId': 'IN_TRACE_ID',
+      'createdAt':       'CREATED AT',
     };
     // Sanitize key → valid DOM id (replace non-alphanumeric with _)
     const cid = k => k.replace(/[^a-zA-Z0-9]/g, '_');
@@ -559,27 +571,37 @@
       setStep(1);
     });
 
-    // Update data panel when W/O or Line changes
-    document.getElementById('wo').addEventListener('input', updateDataPanel);
-    document.getElementById('line').addEventListener('input', updateDataPanel);
-
     // ── Data Panel ────────────────────────────────────────
     function updateDataPanel() {
-      const wo = document.getElementById('wo').value.trim();
-      const line = document.getElementById('line').value.trim();
+      // Build QR JSON preview
+      const qrPreview = { ...printState.parsedQrData };
+      if (!qrPreview.traceId) qrPreview.traceId = '(auto-generated)';
+      qrPreview.internalTraceId = '(auto-generated)';
+      qrPreview.createdAt = '(auto-generated)';
+      document.getElementById('qrJsonOutput').value = JSON.stringify(qrPreview, null, 2);
 
-      // Full data (without traceId)
-      const fullData = { ...printState.parsedQrData };
-      if (wo) fullData['W/O'] = wo;
-      if (line) fullData['LINE'] = line;
-      fullData.createdAt = '(auto-generated)';
+      // Re-render checklist
+      renderChecklist(printState.activeLayoutFields);
+    }
 
-      // JSON preview with placeholder
-      const preview = { ...fullData, traceId: '(auto-generated)' };
-      document.getElementById('qrJsonOutput').value = JSON.stringify(preview, null, 2);
+    const REQUIRED_KEYS = new Set(['partNo','quantity','workOrder','line']);
 
-      // Render checklist with optional custom labels from selected layout
-      renderChecklist(fullData, printState.activeLayoutFields);
+    function renderChecklist(layoutFields) {
+      const container = document.getElementById('fieldChecklist');
+      container.innerHTML = ALL_FIELD_KEYS.map(k => {
+        const lf = layoutFields?.find(f => f.key === k);
+        const label = lf ? lf.label : (FIELD_LABELS[k] || k);
+        const checked = layoutFields ? (lf?.show ?? false) : false;
+        const rawVal = printState.parsedQrData[k] ?? '';
+        const req = REQUIRED_KEYS.has(k) ? '<span class="req-badge">*</span>' : '';
+        return `<div class="field-check-item">
+          <input type="checkbox" id="chk_${cid(k)}" ${checked ? 'checked' : ''} />
+          <label class="fci-label" for="chk_${cid(k)}">${escHtml(label)}</label>
+          ${req}
+          <span class="field-var-badge">{${escHtml(k)}}</span>
+          <input type="text" class="fci-input" id="fci_val_${cid(k)}" value="${escHtml(String(rawVal))}" placeholder="${REQUIRED_KEYS.has(k) ? 'required' : '—'}" onclick="event.stopPropagation()" />
+        </div>`;
+      }).join('');
     }
 
     function parseLayoutFields(layout) {
@@ -594,37 +616,13 @@
       } catch { return null; }
     }
 
-    function renderChecklist(data, layoutFields) {
-      const container = document.getElementById('fieldChecklist');
-      const entries = Object.entries(data).filter(([, v]) => v !== null && v !== undefined && v !== '');
-      if (entries.length === 0) {
-        container.innerHTML = '<p class="field-check-empty">ไม่มีข้อมูล</p>';
-        return;
-      }
-      container.innerHTML = entries.map(([k, v]) => {
-        const lf = layoutFields?.find(f => f.key === k);
-        const label = lf ? lf.label : (FIELD_LABELS[k] || k);
-        const checked = lf ? lf.show : true;
-        return `<div class="field-check-item">
-          <input type="checkbox" id="chk_${cid(k)}" data-key="${escHtml(k)}" ${checked ? 'checked' : ''} />
-          <label class="fci-label" for="chk_${cid(k)}">${escHtml(label)}</label>
-          <input type="text" class="fci-input" id="fci_val_${cid(k)}" value="${escHtml(String(v)).replace(/"/g,'&quot;')}" placeholder="—" onclick="event.stopPropagation()" />
-        </div>`;
-      }).join('');
-    }
-
-    function getCheckedFields(data) {
-      return Object.entries(data)
-        .filter(([k, v]) => {
-          if (v === null || v === undefined || v === '') return false;
-          const cb = document.getElementById('chk_' + cid(k));
-          return cb ? cb.checked : false;
-        })
-        .map(([k, v]) => {
+    function getCheckedFields() {
+      return ALL_FIELD_KEYS
+        .filter(k => document.getElementById('chk_' + cid(k))?.checked)
+        .map(k => {
           const lf = printState.activeLayoutFields?.find(f => f.key === k);
           const label = lf ? lf.label : (FIELD_LABELS[k] || k);
-          const inputEl = document.getElementById('fci_val_' + cid(k));
-          const value = inputEl?.value.trim() || String(v);
+          const value = document.getElementById('fci_val_' + cid(k))?.value.trim() || '';
           return { label, value };
         });
     }
@@ -682,33 +680,32 @@
     document.getElementById('btnPreview').addEventListener('click', doPreview);
 
     async function doPreview() {
-      const wo = document.getElementById('wo').value.trim();
-      const line = document.getElementById('line').value.trim();
       const dpi = document.getElementById('dpi').value;
       const w = document.getElementById('width').value;
       const h = document.getElementById('height').value;
       const errorEl = document.getElementById('error');
-      if (!wo)   { showError('กรุณากรอก Work Order'); return; }
-      if (!line) { showError('กรุณากรอก Line'); return; }
       errorEl.style.display = 'none';
 
-      // Mock traceId
-      const traceId = `TRC-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.random().toString(36).slice(2,10).toUpperCase()}`;
-
-      // Build full QR data
+      // Build full QR data (values from checklist inputs override parsedQrData)
       const fullData = { ...printState.parsedQrData };
-      if (wo) fullData['W/O'] = wo;
-      if (line) fullData['LINE'] = line;
-      fullData.traceId = traceId;
-      fullData.createdAt = new Date().toISOString().slice(0,10).replace(/-/g,'');
+      ALL_FIELD_KEYS.forEach(k => {
+        const inp = document.getElementById('fci_val_' + cid(k));
+        if (inp?.value.trim()) fullData[k] = inp.value.trim();
+      });
+      if (!fullData.traceId) fullData.traceId = `TRC-${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${Math.random().toString(36).slice(2,10).toUpperCase()}`;
+      if (!fullData.internalTraceId) fullData.internalTraceId = `TR-${genUlid()}`;
+      if (!fullData.createdAt) fullData.createdAt = new Date().toISOString();
 
-      // Update JSON display with actual values
+      // Update JSON display (do NOT re-render checklist — preserves user-typed values)
       document.getElementById('qrJsonOutput').value = JSON.stringify(fullData, null, 2);
 
-      // Get selected label fields (exclude traceId from label display)
-      const dataForLabel = { ...fullData };
-      delete dataForLabel.traceId;
-      const labelFields = getCheckedFields(dataForLabel);
+      // Sync only auto-generated fields into checklist inputs (fill if still empty)
+      ['internalTraceId','createdAt'].forEach(k => {
+        const el = document.getElementById('fci_val_' + cid(k));
+        if (el && !el.value.trim()) el.value = fullData[k] || '';
+      });
+
+      const labelFields = getCheckedFields();
 
       const zpl = buildZpl({ qrContent: JSON.stringify(fullData), textFields: labelFields });
 
@@ -823,24 +820,31 @@
 
     // ── Design: Field List ────────────────────────────────
     const ALL_FIELD_KEYS = Object.keys(FIELD_LABELS);
-    const DESIGN_SAMPLE = { 'PLANT':'DFB2', 'VENDOR':'676742', 'P/N':'3475221400', 'QTY':500, 'D/C':'260501 Rev.04', 'W/O':'3622502555', 'LINE':'F05', 'createdAt':'20260513' };
+    const DESIGN_SAMPLE = {
+      'partNo':'4104097105M', 'quantity':100, 'unit':'PCE', 'vendor':'676894',
+      'dateCode':'260309', 'tradingCode':'06', 'po':'T3FY261023',
+      'inventoryNo':'QQT20260251', 'traceId':'20260309000059',
+      'workOrder':'W3622502555', 'line':'F05',
+      'internalTraceId':'INT-20260515-ABC', 'createdAt':'20260515',
+    };
+    const QR_SCHEMA_TEMPLATE = JSON.stringify(
+      Object.fromEntries(Object.keys(FIELD_LABELS).map(k => [k, `{${k}}`])), null, 2
+    );
 
     function populateDesignFieldList(fieldDefs) {
-      document.getElementById('designQrJsonOutput').value =
-        JSON.stringify({ ...DESIGN_SAMPLE, traceId: 'TRC-20260515-ABCD1234' }, null, 2);
+      document.getElementById('designQrJsonOutput').value = QR_SCHEMA_TEMPLATE;
       const container = document.getElementById('designFieldList');
       container.innerHTML = fieldDefs.map(f => {
         const safeKey = f.key.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-        const isCustom = !ALL_FIELD_KEYS.includes(f.key);
         return `<div class="field-row" data-key="${escHtml(f.key)}">
           <input type="checkbox" id="dfl_${cid(f.key)}" ${f.show ? 'checked' : ''} onchange="scheduleDesignPreview()" />
           <span class="field-row-label" id="dfl_lbl_${cid(f.key)}">${escHtml(f.label)}</span>
           <div class="field-row-edit" id="dfl_edit_${cid(f.key)}">
             <input type="text" id="dfl_inp_${cid(f.key)}" value="${escHtml(f.label)}" onkeydown="if(event.key==='Enter')confirmFieldEdit('${safeKey}')" />
           </div>
+          <span class="field-var-badge">{${escHtml(f.key)}}</span>
           <button class="btn-pencil" id="dfl_pen_${cid(f.key)}" onclick="toggleFieldEdit('${safeKey}')" title="แก้ชื่อ field">✏️</button>
           <button class="btn-pen-ok" id="dfl_ok_${cid(f.key)}" onclick="confirmFieldEdit('${safeKey}')" style="display:none">OK</button>
-          ${isCustom ? `<button class="btn-del-field" onclick="this.closest('.field-row').remove()" title="ลบ field นี้">🗑</button>` : ''}
         </div>`;
       }).join('');
     }
@@ -889,24 +893,6 @@
       });
     }
 
-    function addDesignCustomField() {
-      const key = '_c' + Date.now();
-      const ck = cid(key);
-      const row = document.createElement('div');
-      row.className = 'field-row';
-      row.dataset.key = key;
-      row.innerHTML = `
-        <input type="checkbox" id="dfl_${ck}" checked onchange="scheduleDesignPreview()" />
-        <span class="field-row-label" id="dfl_lbl_${ck}" style="display:none"></span>
-        <div class="field-row-edit" id="dfl_edit_${ck}" style="display:flex">
-          <input type="text" id="dfl_inp_${ck}" placeholder="ชื่อ field..." onkeydown="if(event.key==='Enter')confirmFieldEdit('${key}')" />
-        </div>
-        <button class="btn-pencil" id="dfl_pen_${ck}" onclick="toggleFieldEdit('${key}')" title="แก้ชื่อ">✕</button>
-        <button class="btn-pen-ok" id="dfl_ok_${ck}" onclick="confirmFieldEdit('${key}')" style="display:inline-block">OK</button>
-        <button class="btn-del-field" onclick="this.closest('.field-row').remove()" title="ลบ">🗑</button>`;
-      document.getElementById('designFieldList').appendChild(row);
-      document.getElementById('dfl_inp_' + ck).focus();
-    }
 
     function getCheckedKeysFromPrintList() {
       return ALL_FIELD_KEYS.filter(k => document.getElementById('chk_' + cid(k))?.checked);
@@ -972,6 +958,9 @@
         designBlobUrl = URL.createObjectURL(blob);
         img.src = designBlobUrl; img.style.display = 'block'; hint.style.display = 'none';
       } catch { /* silent */ }
+      // Update ZPL viewer
+      const zplOut = document.getElementById('designZplOutput');
+      if (zplOut) zplOut.value = buildZplTemplate(fields);
     }
 
     // ── Design: List ──────────────────────────────────────
@@ -1075,6 +1064,26 @@
     }
 
     // ── Design: Save / Delete ─────────────────────────────
+    function switchDesignTab(tab) {
+      document.getElementById('dTabPreview').classList.toggle('active', tab === 'preview');
+      document.getElementById('dTabQr').classList.toggle('active', tab === 'qr');
+      document.getElementById('dTabZpl').classList.toggle('active', tab === 'zpl');
+      document.getElementById('dPanelPreview').style.display = tab === 'preview' ? 'block' : 'none';
+      document.getElementById('dPanelQr').style.display = tab === 'qr' ? 'block' : 'none';
+      document.getElementById('dPanelZpl').style.display = tab === 'zpl' ? 'block' : 'none';
+    }
+    document.getElementById('dTabPreview').addEventListener('click', () => switchDesignTab('preview'));
+    document.getElementById('dTabQr').addEventListener('click', () => switchDesignTab('qr'));
+    document.getElementById('dTabZpl').addEventListener('click', () => switchDesignTab('zpl'));
+
+    document.getElementById('btnCopyDesignZpl').addEventListener('click', () => {
+      const val = document.getElementById('designZplOutput').value;
+      if (!val) return;
+      navigator.clipboard.writeText(val).then(() => {
+        const b = document.getElementById('btnCopyDesignZpl'); b.textContent = 'Copied!';
+        setTimeout(() => b.textContent = 'Copy', 1500);
+      });
+    });
     document.getElementById('btnSaveLayout').addEventListener('click', saveLayout);
     async function saveLayout() {
       const name = document.getElementById('editName').value.trim();
@@ -1087,8 +1096,7 @@
         dataY:+document.getElementById('dataY').value, fontSize:+document.getElementById('fontSize').value,
         valOffset:+document.getElementById('valOffset').value,
         zplTemplate: buildZplTemplate(fields),
-        labelFields: fields.filter(f => f.show).map(f => f.key),
-        labelFieldsJson: JSON.stringify(fields),
+        labelFields: fields,
       };
       const btn = document.getElementById('btnSaveLayout');
       btn.textContent='Saving...'; btn.disabled=true;
@@ -1127,6 +1135,15 @@
     }
     function showError(msg) { const e=document.getElementById('error'); e.textContent=msg; e.style.display='block'; }
     function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function genUlid() {
+      const B32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+      const t = Date.now();
+      let ts = '', n = t;
+      for (let i = 9; i >= 0; i--) { ts = B32[n % 32] + ts; n = Math.floor(n / 32); }
+      let rnd = '';
+      for (let i = 0; i < 16; i++) rnd += B32[Math.floor(Math.random() * 32)];
+      return ts + rnd;
+    }
     function fmtDate(iso) { const d=new Date(iso); return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`; }
 
     function doScan(data, displayName) {

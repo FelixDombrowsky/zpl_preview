@@ -28,6 +28,5 @@ public class LayoutTemplateRequest
   public int FontSize { get; set; } = 28;
   public int ValOffset { get; set; } = 120;
   public string ZplTemplate { get; set; } = "";
-  public List<string> LabelFields { get; set; } = [];
-  public string? LabelFieldsJson { get; set; }
+  public System.Text.Json.JsonElement? LabelFields { get; set; }
 }

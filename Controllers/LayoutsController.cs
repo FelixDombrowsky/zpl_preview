@@ -20,7 +20,7 @@ public class LayoutsController(AppDbContext db) : ControllerBase
       QrX = req.QrX, QrY = req.QrY, QrSize = req.QrSize,
       DataX = req.DataX, DataY = req.DataY, FontSize = req.FontSize, ValOffset = req.ValOffset,
       ZplTemplate = req.ZplTemplate,
-      LabelFieldsJson = req.LabelFieldsJson ?? System.Text.Json.JsonSerializer.Serialize(req.LabelFields),
+      LabelFieldsJson = req.LabelFields?.GetRawText() ?? "[]",
       CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow
     };
     db.LayoutTemplates.Add(t);
